@@ -50,7 +50,7 @@
                                     <option value="{{ $customer->id }}" {{ Str::contains(strtolower($customer->name), ['umum', 'walk-in', 'general']) ? 'selected' : '' }}>{{ $customer->name }}</option>
                                 @endforeach
                             </select>
-                            <button class="btn btn-outline-secondary" type="button" onclick="alert('Quick add not implemented yet.')"><i class="ri-add-line"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#addCustomerModal"><i class="ri-add-line"></i></button>
                         </div>
                     </div>
 
@@ -133,6 +133,39 @@
                     </div>
 
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCustomerModalLabel">Add New Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="new_customer_name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="new_customer_name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_customer_contact" class="form-label">Contact (HP/WA)</label>
+                        <input type="text" class="form-control" id="new_customer_contact" name="contact">
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_customer_address" class="form-label">Address</label>
+                        <textarea class="form-control" id="new_customer_address" name="address"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveNewCustomer()">Save Customer</button>
             </div>
         </div>
     </div>
@@ -264,5 +297,45 @@
 
     // Initialize with one row
     addItem();
+    function saveNewCustomer() {
+        const form = document.getElementById('addCustomerForm');
+        const formData = new FormData(form);
+
+        fetch('{{ route('customers.store') }}', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add to select
+                const select = document.getElementById('customer_id');
+                const option = new Option(data.customer.name, data.customer.id, true, true);
+                select.add(option);
+                
+                // Close modal
+                const modalElement = document.getElementById('addCustomerModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+                
+                // Reset form
+                form.reset();
+                
+                // Show success message
+                alert('Customer added successfully!');
+            } else {
+                alert('Error adding customer');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding customer. Please check input.');
+        });
+    }
 </script>
 @endsection

@@ -25,7 +25,15 @@ class CustomerController extends Controller
             'address' => 'nullable',
         ]);
 
-        \App\Models\Customer::create($request->all());
+        $customer = \App\Models\Customer::create($request->all());
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'customer' => $customer,
+                'message' => 'Customer created successfully.'
+            ]);
+        }
 
         return redirect()->route('customers.index')
             ->with('success', 'Customer created successfully.');
