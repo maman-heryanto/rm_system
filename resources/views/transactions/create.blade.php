@@ -42,11 +42,6 @@
                                     </select>
                                 </div>
                                 <!--end col-->
-                                <div class="col-lg-4 col-6">
-                                    <label for="due_date" class="form-label text-muted text-uppercase fw-semibold">Due Date</label>
-                                    <input type="date" class="form-control bg-light border-0" id="due_date" name="due_date" placeholder="Select date" value="{{ old('due_date') }}">
-                                </div>
-                                <!--end col-->
                             </div>
                             <!--end row-->
                         </div>
@@ -60,7 +55,7 @@
                             <label for="customer_id" class="text-muted text-uppercase fw-semibold">{{ request('type') == 'purchase' ? 'Supplier' : 'Customer' }}</label>
                              <div class="input-group">
                                 <select class="form-select bg-light border-0" id="customer_id" name="customer_id">
-                                    <option value="">Select {{ request('type') == 'purchase' ? 'Supplier' : 'Customer' }}</option>
+                                    <option value="">{{ request('type') == 'purchase' ? 'Select Supplier' : 'Walk-in Customer / Select Customer' }}</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                     @endforeach
@@ -158,11 +153,17 @@
                         </table>
                         <!--end table-->
                     </div>
-                    <div class="row mt-3" id="payment_details_section" style="display: none;">
+                    <div class="row mt-3" id="payment_details_section">
                         <div class="col-lg-4">
                             <div class="mb-2">
-                                <label for="amount_paid" class="form-label text-muted text-uppercase fw-semibold">Amount Paid</label>
-                                <input type="number" class="form-control bg-light border-0" id="amount_paid" name="amount_paid" placeholder="Enter amount paid">
+                                <label for="amount_paid" class="form-label text-muted text-uppercase fw-semibold">Amount Paid (Bayar)</label>
+                                <input type="number" class="form-control bg-light border-0" id="amount_paid" name="amount_paid" placeholder="Enter amount paid" onkeyup="calculateChange()">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-2">
+                                <label for="change_amount" class="form-label text-muted text-uppercase fw-semibold">Change (Kembalian)</label>
+                                <input type="text" class="form-control bg-light border-0" id="change_amount" placeholder="Rp 0" readonly>
                             </div>
                         </div>
                         <!--end col-->
@@ -326,6 +327,7 @@
 
         document.getElementById('cart-total').value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
         document.getElementById('total_amount_input').value = total;
+        calculateChange();
     }
 
     // Event Delegation for Plus/Minus buttons
@@ -341,11 +343,40 @@
     function togglePaymentFields() {
         var status = document.getElementById('payment_status').value;
         var section = document.getElementById('payment_details_section');
-        if (status === 'paid') {
+        var customerSelect = document.getElementById('customer_id');
+        
+        var umumOption = Array.from(customerSelect.options).find(option => option.text.toLowerCase().includes('umum') || option.text.toLowerCase().includes('walk-in'));
+
+        // 1. Visibility Logic
+        if (status === 'unpaid') {
             section.style.display = 'none';
         } else {
-            section.style.display = 'block';
+            // Paid or Partial -> Show Payment Fields
+            section.style.display = 'flex';
         }
+
+        // 2. Customer Logic
+        if (status === 'paid') {
+             // Paid -> Auto-select Umum if nothing selected
+             if (umumOption && customerSelect.value === "") {
+                customerSelect.value = umumOption.value;
+             }
+        } else {
+            // Unpaid or Partial -> Must be real customer, so clear Umum if selected
+            if (umumOption && customerSelect.value == umumOption.value) {
+                customerSelect.value = "";
+            }
+        }
+    }
+
+    function calculateChange() {
+        var total = parseFloat(document.getElementById('total_amount_input').value) || 0;
+        var paid = parseFloat(document.getElementById('amount_paid').value) || 0;
+        var change = paid - total;
+        
+        if (change < 0) change = 0; // Don't show negative change for partial
+
+        document.getElementById('change_amount').value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(change);
     }
 
     // Modal Logic
@@ -390,6 +421,30 @@
         });
     }
     
+    // Form Submission Validation
+    document.getElementById('invoice_form').addEventListener('submit', function(event) {
+        var status = document.getElementById('payment_status').value;
+        var total = parseFloat(document.getElementById('total_amount_input').value) || 0;
+        var paid = parseFloat(document.getElementById('amount_paid').value) || 0;
+        var customerSelect = document.getElementById('customer_id');
+        var selectedOption = customerSelect.options[customerSelect.selectedIndex];
+        var customerName = selectedOption ? selectedOption.text.toLowerCase() : '';
+
+        // Block Paid if Amount < Total
+        if (status === 'paid' && paid < total) {
+            event.preventDefault();
+            alert("Amount Paid (Bayar) is less than Total Amount.\nPlease change Payment Status to 'Partial' or 'Unpaid', or enter the correct amount.");
+            return;
+        }
+
+        // Block Unpaid/Partial if Customer is Empty or Umum
+        if ((status === 'unpaid' || status === 'partial') && (customerSelect.value === "" || customerName.includes('umum') || customerName.includes('walk-in'))) {
+            event.preventDefault();
+            alert("For Unpaid or Partial transactions, you must select a valid Customer (Cannot be Umum/Walk-in).");
+            return;
+        }
+    });
+
     // Run on load
     togglePaymentFields();
     calculateTotal(); // Ensure totals are set on load

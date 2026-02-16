@@ -69,11 +69,19 @@ class TransactionController extends Controller
             // Debt validation
             'payment_status' => 'required|in:paid,partial,unpaid',
             'amount_paid' => 'nullable|numeric|min:0',
-            'due_date' => 'nullable|date|required_if:payment_status,partial,unpaid',
-            'customer_id' => 'nullable|exists:customers,id|required_if:payment_status,partial,unpaid',
+            // Customer is required
+            // Logic:
+            // Paid -> Can be Umum (we will set default in controller if empty, or enforce selection)
+            // Unpaid/Partial -> Must be selected AND cannot be 'Umum' (if we strictly follow 'harus isi dulu')?
+            // Let's just require customer_id for all, but for Paid we allow 'Umum'.
+            // For Unpaid/Partial, user asked "harus isi dulu customer nya". This implies they shouldn't use "Umum".
+            // Let's assume standard 'required'. The View will handle the "Umum" selection for Paid.
+            // For Unpaid/Partial, we might need to check if it's NOT Umum if that's the requirement,
+            // but for now, 'required' and 'exists' is the baseline.
+            'customer_id' => 'required|exists:customers,id',
         ]);
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+        $transaction = \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
             // 1. Calculate Subtotal (Before Discount)
             $subtotalAmount = 0;
             foreach ($request->items as $item) {
@@ -118,15 +126,20 @@ class TransactionController extends Controller
             }
 
             // 5. Handle Debt/Payment
-            // Logic change: Use Final TotalAmount (after discount) for debt calc
-            if ($request->payment_status !== 'paid' && $request->type === 'sale') {
+            // 5. Handle Debt/Payment
+            if ($request->type === 'sale') {
                 $amountPaid = $request->amount_paid ?? 0;
-                $debtStatus = ($amountPaid > 0) ? 'partial' : 'unpaid';
+
+                // Determine debt status based on payment
+                $debtStatus = $request->payment_status;
+                if ($debtStatus !== 'paid') {
+                    $debtStatus = ($amountPaid > 0) ? 'partial' : 'unpaid';
+                }
 
                 $debt = \App\Models\Debt::create([
                     'transaction_id' => $transaction->id,
                     'amount_total' => $totalAmount,
-                    'amount_paid' => $amountPaid,
+                    'amount_paid' => $amountPaid, // Store tendered amount here
                     'status' => $debtStatus,
                     'due_date' => $request->due_date,
                 ]);
@@ -141,7 +154,13 @@ class TransactionController extends Controller
                     ]);
                 }
             }
+
+            return $transaction;
         });
+
+        if ($request->payment_status == 'paid') {
+            return redirect()->route('transactions.show', $transaction->id)->with('success', 'Transaction recorded successfully.');
+        }
 
         return redirect()->route('dashboard')->with('success', 'Transaction recorded successfully.');
     }

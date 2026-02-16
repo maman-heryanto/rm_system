@@ -23,6 +23,9 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Transaction #{{ $transaction->id }}</h5>
                 <div class="d-flex align-items-center gap-2">
+                    <a href="{{ route('transactions.index') }}" class="btn btn-soft-secondary btn-sm">
+                        <i class="ri-arrow-left-line align-bottom me-1"></i> Back to List
+                    </a>
                     <a href="{{ route('transactions.print', $transaction->id) }}" target="_blank" class="btn btn-soft-primary btn-sm">
                         <i class="ri-printer-line align-bottom me-1"></i> Print Receipt
                     </a>
@@ -41,15 +44,21 @@
                         <p class="fw-medium mb-2">{{ $transaction->customer->name ?? 'General' }}</p>
                     </div>
                     <div class="col-sm-6">
-                        <h6 class="text-muted text-uppercase fw-semibold mb-3">Payment Status</h6>
+                         <h6 class="text-muted text-uppercase fw-semibold mb-3">Payment Status</h6>
                         @if($transaction->debt)
                             <span class="badge {{ $transaction->debt->status === 'paid' ? 'bg-success' : ($transaction->debt->status === 'partial' ? 'bg-warning' : 'bg-danger') }} fs-12">
                                 {{ ucfirst($transaction->debt->status) }}
                             </span>
                              <div class="mt-2 text-muted">
-                                <p class="mb-1">Total Debt: <span class="fw-semibold">Rp {{ number_format($transaction->debt->amount_total, 0, ',', '.') }}</span></p>
-                                <p class="mb-1">Paid: <span class="fw-semibold">Rp {{ number_format($transaction->debt->amount_paid, 0, ',', '.') }}</span></p>
-                                <a href="{{ route('debts.show', $transaction->debt->id) }}" class="link-primary text-decoration-underline">View Debt Details</a>
+                                <p class="mb-1">Total Amount: <span class="fw-semibold">Rp {{ number_format($transaction->debt->amount_total, 0, ',', '.') }}</span></p>
+                                <p class="mb-1">Amount Paid: <span class="fw-semibold">Rp {{ number_format($transaction->debt->amount_paid, 0, ',', '.') }}</span></p>
+                                @if($transaction->debt->amount_paid > $transaction->debt->amount_total)
+                                    <p class="mb-1 text-success">Change: <span class="fw-bold">Rp {{ number_format($transaction->debt->amount_paid - $transaction->debt->amount_total, 0, ',', '.') }}</span></p>
+                                @endif
+                                @if($transaction->debt->status !== 'paid')
+                                    <p class="mb-1 text-danger">Remaining: <span class="fw-semibold">Rp {{ number_format($transaction->debt->amount_total - $transaction->debt->amount_paid, 0, ',', '.') }}</span></p>
+                                     <a href="{{ route('debts.show', $transaction->debt->id) }}" class="link-primary text-decoration-underline">View Debt Details</a>
+                                @endif
                              </div>
                         @else
                             <span class="badge bg-success fs-12">Fully Paid</span>
