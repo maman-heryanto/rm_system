@@ -169,10 +169,7 @@
                         <!--end table-->
                     </div>
                     <!-- Payment Details Moved to Table -->
-                    <div class="mt-4">
-                        <label for="notes" class="form-label text-muted text-uppercase fw-semibold">NOTES</label>
-                        <textarea class="form-control alert alert-info" id="notes" name="notes" placeholder="Notes" rows="2"></textarea>
-                    </div>
+
                     <div class="hstack gap-2 justify-content-end d-print-none mt-4">
                         <button type="submit" class="btn btn-success"><i class="ri-save-3-line align-bottom me-1"></i> Save Transaction</button>
                     </div>
