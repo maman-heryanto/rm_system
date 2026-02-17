@@ -15,9 +15,9 @@
                             <div class="profile-user mx-auto  mb-3">
                                 <span class="d-inline-block p-2 bg-soft-light rounded-circle">
                                      @if(request('type') == 'purchase')
-                                        <i class="ri-shopping-cart-line display-4 text-primary"></i>
+                                        <img src="{{ asset('assets/images/logo-rm.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="40">
                                     @else
-                                        <i class="ri-file-list-3-line display-4 text-primary"></i>
+                                        <img src="{{ asset('assets/images/logo-rm.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="40">
                                     @endif
                                 </span>
                             </div>
@@ -145,6 +145,21 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
+                                            <tbody id="payment_details_section" class="border-top border-top-dashed">
+                                                <tr>
+                                                    <th scope="row">Amount Paid (Bayar)</th>
+                                                    <td>
+                                                        <input type="text" class="form-control bg-light border-0" id="amount_paid_display" placeholder="Rp 0" onkeyup="updateAmountPaid(this)">
+                                                        <input type="hidden" id="amount_paid" name="amount_paid">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Change (Kembalian)</th>
+                                                    <td>
+                                                        <input type="text" class="form-control bg-light border-0" id="change_amount" placeholder="Rp 0" readonly>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                         <!--end table-->
                                     </td>
@@ -153,23 +168,7 @@
                         </table>
                         <!--end table-->
                     </div>
-                    <div class="row mt-3" id="payment_details_section">
-                        <div class="col-lg-4">
-                            <div class="mb-2">
-                                <label for="amount_paid_display" class="form-label text-muted text-uppercase fw-semibold">Amount Paid (Bayar)</label>
-                                <input type="text" class="form-control bg-light border-0" id="amount_paid_display" placeholder="Rp 0" onkeyup="updateAmountPaid(this)">
-                                <input type="hidden" id="amount_paid" name="amount_paid">
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="mb-2">
-                                <label for="change_amount" class="form-label text-muted text-uppercase fw-semibold">Change (Kembalian)</label>
-                                <input type="text" class="form-control bg-light border-0" id="change_amount" placeholder="Rp 0" readonly>
-                            </div>
-                        </div>
-                        <!--end col-->
-                    </div>
-                    <!--end row-->
+                    <!-- Payment Details Moved to Table -->
                     <div class="mt-4">
                         <label for="notes" class="form-label text-muted text-uppercase fw-semibold">NOTES</label>
                         <textarea class="form-control alert alert-info" id="notes" name="notes" placeholder="Notes" rows="2"></textarea>
@@ -353,7 +352,7 @@
             section.style.display = 'none';
         } else {
             // Paid or Partial -> Show Payment Fields
-            section.style.display = 'flex';
+            section.style.display = 'table-row-group';
         }
 
         // 2. Customer Logic
