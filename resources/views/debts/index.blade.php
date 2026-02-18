@@ -51,7 +51,7 @@
                                     @if($debt->status === 'paid')
                                         <span class="badge bg-success-subtle text-success text-uppercase">Lunas</span>
                                     @elseif($debt->status === 'partial')
-                                        <span class="badge bg-warning-subtle text-warning text-uppercase">Sebagian</span>
+                                        <span class="badge bg-warning-subtle text-warning text-uppercase">Bayar Sebagian</span>
                                     @else
                                         <span class="badge bg-danger-subtle text-danger text-uppercase">Belum Bayar</span>
                                     @endif

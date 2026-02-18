@@ -37,8 +37,8 @@
                                     <label for="payment_status" class="form-label text-muted text-uppercase fw-semibold">Status Pembayaran</label>
                                     <select class="form-select bg-light border-0" id="payment_status" name="payment_status" onchange="togglePaymentFields()">
                                         <option value="paid">Lunas</option>
-                                        <option value="unpaid">Belum Lunas</option>
-                                        <option value="partial">Sebagian</option>
+                                        <option value="unpaid">Hutang</option>
+                                        <option value="partial">Bayar Sebagian</option>
                                     </select>
                                 </div>
                                 <!--end col-->
@@ -462,7 +462,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Kesalahan Pembayaran',
-                text: "Jumlah Dibayar kurang dari Total Jumlah. Harap ubah Status Pembayaran menjadi 'Sebagian' atau 'Belum Lunas', atau masukkan jumlah yang benar."
+                text: "Jumlah Dibayar kurang dari Total Jumlah. Harap ubah Status Pembayaran menjadi 'Bayar Sebagian' atau 'Hutang', atau masukkan jumlah yang benar."
             });
             return;
         }
@@ -473,7 +473,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Pelanggan Tidak Valid',
-                text: "Untuk transaksi Belum Lunas atau Sebagian, Anda harus memilih Pelanggan yang valid (Tidak boleh Umum/Walk-in)."
+                text: "Untuk transaksi Hutang atau Bayar Sebagian, Anda harus memilih Pelanggan yang valid (Tidak boleh Umum/Walk-in)."
             });
             return;
         }
