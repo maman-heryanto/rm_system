@@ -37,16 +37,7 @@
                     </a>
                 </li>
 
-                
-                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pembukuan</span></li>
-
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('inventory.index') }}">
-                        <i class="ri-store-3-line"></i> <span data-key="t-inventory">Buku penjualan manual</span>
-                    </a>
-                </li>
-
-                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Management</span></li>
+                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">POS System</span></li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('transactions.index', ['type' => 'sale']) }}">
@@ -66,6 +57,8 @@
                     </a>
                 </li>
 
+                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Management Barang</span></li>
+
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('transactions.index', ['type' => 'purchase']) }}">
                         <i class="ri-shopping-cart-line"></i> <span data-key="t-purchases">Pembelian</span>
@@ -75,6 +68,14 @@
                  <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('products.index') }}">
                         <i class="ri-shopping-bag-3-line"></i> <span data-key="t-products">Produk</span>
+                    </a>
+                </li>
+
+                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pembukuan</span></li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('inventory.index') }}">
+                        <i class="ri-store-3-line"></i> <span data-key="t-inventory">Buku penjualan manual</span>
                     </a>
                 </li>
 
