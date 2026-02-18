@@ -190,7 +190,7 @@
 @endsection
 
 <!-- Hidden Receipt Container for Catching -->
-<div id="receipt-container" style="display: none; position: absolute; top: 0; left: -9999px; width: 58mm; padding: 10px; background: white; color: black; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
+<div id="receipt-container" style="display: none; position: absolute; top: 0; left: -9999px; width: 58mm; padding: 25px; background: white; color: black; font-family: 'Courier New', Courier, monospace; font-size: 12px; border: 1px solid #ddd; border-radius: 5px;">
     <div style="text-align: center; margin-bottom: 10px;">
         <h1 style="font-size: 16px; font-weight: bold; margin: 0; text-transform: uppercase;">Toko Beras Rizki Mandiri</h1>
         <p style="font-size: 10px; margin: 2px 0;">Jl Wangunsari RT 03 RW 03, Kecamatan Lembang</p>

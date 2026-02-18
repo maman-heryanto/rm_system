@@ -170,8 +170,8 @@
              shareBtn.innerText = 'Generating...';
              shareBtn.disabled = true;
 
-             // Select the container to capture
-             const element = document.querySelector('.container');
+             // Select the body to capture (includes padding)
+             const element = document.body;
              
              // Use html2canvas to generate the image
              html2canvas(element, {
@@ -179,6 +179,13 @@
                  backgroundColor: '#ffffff',
                  ignoreElements: (node) => {
                      return node.classList && node.classList.contains('no-print');
+                 },
+                 onclone: (clonedDoc) => {
+                     // Add extra padding to the cloned body for better aesthetics
+                     clonedDoc.body.style.padding = '25px';
+                     clonedDoc.body.style.width = 'auto'; // Allow width to adjust
+                     clonedDoc.body.style.maxWidth = '65mm'; // Constrain slightly so it doesn't get too wide
+                     clonedDoc.body.style.margin = '0 auto';
                  }
              }).then(canvas => {
                  canvas.toBlob(blob => {
