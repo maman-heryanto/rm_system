@@ -6,12 +6,12 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Dashboard</h4>
+            <h4 class="mb-sm-0">Dasbor</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                    <li class="breadcrumb-item active">Dashboard</li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dasbor</a></li>
+                    <li class="breadcrumb-item active">Dasbor</li>
                 </ol>
             </div>
 
@@ -50,7 +50,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-success mb-0">Paid (Lunas) Today</p>
+                        <p class="text-uppercase fw-medium text-success mb-0">Lunas (Hari Ini)</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -73,7 +73,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-danger mb-0">Unpaid (Belum Bayar) Today</p>
+                        <p class="text-uppercase fw-medium text-danger mb-0">Belum Bayar (Hari Ini)</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -96,7 +96,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-warning mb-0">Partial (Cicil) Today</p>
+                        <p class="text-uppercase fw-medium text-warning mb-0">Cicilan (Hari Ini)</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -122,22 +122,22 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Quick Actions</h4>
+                <h4 class="card-title mb-0 flex-grow-1">Aksi Cepat</h4>
             </div><!-- end card header -->
 
             <div class="card-body">
                 <div class="d-flex gap-2 flex-wrap">
                     <a href="{{ route('products.create') }}" class="btn btn-primary">
-                        <i class="ri-add-line align-bottom me-1"></i> Add Product
+                        <i class="ri-add-line align-bottom me-1"></i> Tambah Produk
                     </a>
                     <a href="{{ route('transactions.create', ['type' => 'sale']) }}" class="btn btn-success">
-                        <i class="ri-shopping-cart-2-line align-bottom me-1"></i> New Sale
+                        <i class="ri-shopping-cart-2-line align-bottom me-1"></i> Penjualan Baru
                     </a>
                     <a href="{{ route('transactions.create', ['type' => 'purchase']) }}" class="btn btn-info">
-                        <i class="ri-download-2-line align-bottom me-1"></i> New Purchase
+                        <i class="ri-download-2-line align-bottom me-1"></i> Pembelian Baru
                     </a>
                      <a href="{{ route('debts.index') }}" class="btn btn-warning">
-                        <i class="ri-money-dollar-circle-line align-bottom me-1"></i> Record Payment
+                        <i class="ri-money-dollar-circle-line align-bottom me-1"></i> Catat Pembayaran
                     </a>
                 </div>
             </div><!-- end card body -->

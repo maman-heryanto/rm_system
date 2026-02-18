@@ -28,24 +28,24 @@
                     <div class="flex">
                         <div class="shrink-0 flex items-center">
                             <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800">
-                                RM System
+                                Sistem RM
                             </a>
                         </div>
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Dashboard
+                                Dasbor
                             </a>
                             <a href="{{ route('products.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Products
+                                Produk
                             </a>
                             <a href="{{ route('transactions.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Transactions
+                                Transaksi
                             </a>
                             <a href="{{ route('customers.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Customers
+                                Pelanggan
                             </a>
                             <a href="{{ route('debts.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Debts
+                                Hutang
                             </a>
                         </div>
                     </div>
@@ -63,8 +63,8 @@
 
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <strong class="font-bold">Whoops!</strong>
-                    <span class="block sm:inline">There were some problems with your input.</span>
+                    <strong class="font-bold">Ups!</strong>
+                    <span class="block sm:inline">Terdapat beberapa masalah dengan input Anda.</span>
                     <ul class="list-disc list-inside mt-2">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -79,7 +79,7 @@
         <footer class="bg-white border-t border-gray-200 mt-auto">
              <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 <p class="text-center text-gray-500 text-sm">
-                    &copy; {{ date('Y') }} RM System. All rights reserved.
+                    &copy; {{ date('Y') }} Sistem RM. Hak cipta dilindungi undang-undang.
                 </p>
             </div>
         </footer>

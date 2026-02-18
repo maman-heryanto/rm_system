@@ -6,12 +6,12 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Products</h4>
+            <h4 class="mb-sm-0">Produk</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Products</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dasbor</a></li>
+                    <li class="breadcrumb-item active">Produk</li>
                 </ol>
             </div>
         </div>
@@ -22,10 +22,10 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Product List</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Daftar Produk</h5>
                 <div>
                      <a href="{{ route('products.create') }}" class="btn btn-primary add-btn">
-                        <i class="ri-add-line align-bottom me-1"></i> Add Product
+                        <i class="ri-add-line align-bottom me-1"></i> Tambah Produk
                     </a>
                 </div>
             </div>
@@ -34,12 +34,12 @@
                     <table class="table table-nowrap align-middle table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Name</th>
-                                <th>Stock</th>
-                                <th>Buy Price</th>
-                                <th>Total Asset</th>
-                                <th>Sell Price</th>
-                                <th>Action</th>
+                                <th>Nama</th>
+                                <th>Stok</th>
+                                <th>Harga Beli</th>
+                                <th>Total Aset</th>
+                                <th>Harga Jual</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                                 <td>{{ $product->name }}</td>
                                 <td>
                                     @if($product->stock < 5)
-                                        <span class="badge bg-danger-subtle text-danger">{{ $product->stock }} (Low)</span>
+                                        <span class="badge bg-danger-subtle text-danger">{{ $product->stock }} (Rendah)</span>
                                     @else
                                         <span class="badge bg-success-subtle text-success">{{ $product->stock }}</span>
                                     @endif
@@ -62,13 +62,13 @@
                                             <i class="ri-more-fill align-middle"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a href="{{ route('products.edit', $product->id) }}" class="dropdown-item"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
+                                            <li><a href="{{ route('products.edit', $product->id) }}" class="dropdown-item"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Ubah</a></li>
                                             <li>
                                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item remove-item-btn">
-                                                        <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
+                                                        <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Hapus
                                                     </button>
                                                 </form>
                                             </li>
@@ -78,7 +78,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center">No products found.</td>
+                                <td colspan="6" class="text-center">Tidak ada produk ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>

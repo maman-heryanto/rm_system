@@ -22,23 +22,23 @@
                                 </span>
                             </div>
                             <div>
-                                <h5 class="mb-1">{{ request('type') == 'purchase' ? 'New Purchase' : 'New Sale' }}</h5>
-                                <p class="text-muted mb-0">Create a new transaction</p>
+                                <h5 class="mb-1">{{ request('type') == 'purchase' ? 'Pembelian Baru' : 'Penjualan Baru' }}</h5>
+                                <p class="text-muted mb-0">Buat transaksi baru</p>
                             </div>
                         </div>
                         <div class="col-lg-8">
                             <div class="row g-3">
                                 <div class="col-lg-4 col-6">
-                                    <label for="transaction_date" class="form-label text-muted text-uppercase fw-semibold">Date</label>
-                                    <input type="date" class="form-control bg-light border-0" id="transaction_date" name="transaction_date" placeholder="Select date" value="{{ old('transaction_date', date('Y-m-d')) }}" required>
+                                    <label for="transaction_date" class="form-label text-muted text-uppercase fw-semibold">Tanggal</label>
+                                    <input type="date" class="form-control bg-light border-0" id="transaction_date" name="transaction_date" placeholder="Pilih tanggal" value="{{ old('transaction_date', date('Y-m-d')) }}" required>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-4 col-6">
-                                    <label for="payment_status" class="form-label text-muted text-uppercase fw-semibold">Payment Status</label>
+                                    <label for="payment_status" class="form-label text-muted text-uppercase fw-semibold">Status Pembayaran</label>
                                     <select class="form-select bg-light border-0" id="payment_status" name="payment_status" onchange="togglePaymentFields()">
-                                        <option value="paid">Paid</option>
-                                        <option value="unpaid">Unpaid</option>
-                                        <option value="partial">Partial</option>
+                                        <option value="paid">Lunas</option>
+                                        <option value="unpaid">Belum Lunas</option>
+                                        <option value="partial">Sebagian</option>
                                     </select>
                                 </div>
                                 <!--end col-->
@@ -52,10 +52,10 @@
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-lg-4 col-sm-6">
-                            <label for="customer_id" class="text-muted text-uppercase fw-semibold">{{ request('type') == 'purchase' ? 'Supplier' : 'Customer' }}</label>
+                            <label for="customer_id" class="text-muted text-uppercase fw-semibold">{{ request('type') == 'purchase' ? 'Pemasok' : 'Pelanggan' }}</label>
                              <div class="input-group">
                                 <select class="form-select bg-light border-0" id="customer_id" name="customer_id">
-                                    <option value="">{{ request('type') == 'purchase' ? 'Select Supplier' : 'Select Customer' }}</option>
+                                    <option value="">{{ request('type') == 'purchase' ? 'Pilih Pemasok' : 'Pilih Pelanggan' }}</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                     @endforeach
@@ -73,10 +73,10 @@
                             <thead class="align-middle">
                                 <tr class="table-active">
                                     <th scope="col" style="width: 50px;">#</th>
-                                    <th scope="col">Product Details</th>
-                                    <th scope="col" style="width: 120px;">Price</th>
-                                    <th scope="col" style="width: 120px;">Quantity</th>
-                                    <th scope="col" class="text-end" style="width: 150px;">Amount</th>
+                                    <th scope="col">Detail Produk</th>
+                                    <th scope="col" style="width: 120px;">Harga</th>
+                                    <th scope="col" style="width: 120px;">Jumlah</th>
+                                    <th scope="col" class="text-end" style="width: 150px;">Total</th>
                                     <th scope="col" class="text-end" style="width: 105px;"></th>
                                 </tr>
                             </thead>
@@ -86,7 +86,7 @@
                                     <td class="text-start">
                                         <div class="mb-2">
                                             <select class="form-select bg-light border-0" name="items[0][product_id]" onchange="updatePrice(this)" required>
-                                                <option value="">Select Product...</option>
+                                                <option value="">Pilih Produk...</option>
                                                 @foreach($products as $product)
                                                     <option value="{{ $product->id }}" data-price="{{ request('type') == 'purchase' ? $product->buy_price : $product->sell_price }}">{{ $product->name }}</option>
                                                 @endforeach
@@ -109,7 +109,7 @@
                                         </div>
                                     </td>
                                     <td class="product-removal">
-                                        <a href="javascript:void(0)" class="btn btn-success" onclick="removeItem(this)">Delete</a>
+                                        <a href="javascript:void(0)" class="btn btn-success" onclick="removeItem(this)">Hapus</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -117,7 +117,7 @@
                                 <tr id="newForm" style="display: none;"></tr>
                                 <tr>
                                     <td colspan="5">
-                                        <a href="javascript:new_link()" id="add-item" class="btn btn-soft-secondary fw-medium"><i class="ri-add-fill me-1 align-bottom"></i> Add Item</a>
+                                        <a href="javascript:new_link()" id="add-item" class="btn btn-soft-secondary fw-medium"><i class="ri-add-fill me-1 align-bottom"></i> Tambah Barang</a>
                                     </td>
                                 </tr>
                                 <tr class="border-top border-top-dashed mt-2">
@@ -132,13 +132,13 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Discount</th>
+                                                    <th scope="row">Diskon</th>
                                                     <td>
                                                         <input type="number" class="form-control bg-light border-0" id="cart-discount" name="discount" placeholder="0" onchange="calculateTotal()" />
                                                     </td>
                                                 </tr>
                                                 <tr class="border-top border-top-dashed">
-                                                    <th scope="row">Total Amount</th>
+                                                    <th scope="row">Total Jumlah</th>
                                                     <td>
                                                         <input type="hidden" name="total_amount" id="total_amount_input">
                                                         <input type="text" class="form-control bg-light border-0" id="cart-total" placeholder="Rp 0" readonly />
@@ -147,14 +147,14 @@
                                             </tbody>
                                             <tbody id="payment_details_section" class="border-top border-top-dashed">
                                                 <tr>
-                                                    <th scope="row">Amount Paid (Bayar)</th>
+                                                    <th scope="row">Jumlah Dibayar (Bayar)</th>
                                                     <td>
                                                         <input type="text" class="form-control bg-light border-0" id="amount_paid_display" placeholder="Rp 0" onkeyup="updateAmountPaid(this)">
                                                         <input type="hidden" id="amount_paid" name="amount_paid">
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Change (Kembalian)</th>
+                                                    <th scope="row">Kembalian</th>
                                                     <td>
                                                         <input type="text" class="form-control bg-light border-0" id="change_amount" placeholder="Rp 0" readonly>
                                                     </td>
@@ -171,7 +171,7 @@
                     <!-- Payment Details Moved to Table -->
 
                     <div class="hstack gap-2 justify-content-end d-print-none mt-4">
-                        <button type="submit" class="btn btn-success"><i class="ri-save-3-line align-bottom me-1"></i> Save Transaction</button>
+                        <button type="submit" class="btn btn-success"><i class="ri-save-3-line align-bottom me-1"></i> Simpan Transaksi</button>
                     </div>
                 </div>
             </form>
@@ -186,29 +186,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCustomerModalLabel">Add New {{ request('type') == 'purchase' ? 'Supplier' : 'Customer' }}</h5>
+                <h5 class="modal-title" id="addCustomerModalLabel">Tambah {{ request('type') == 'purchase' ? 'Pemasok' : 'Pelanggan' }} Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addCustomerForm">
                     <input type="hidden" name="type" value="{{ request('type') == 'purchase' ? 'supplier' : 'customer' }}">
                     <div class="mb-3">
-                        <label for="new_name" class="form-label">Name</label>
+                        <label for="new_name" class="form-label">Nama</label>
                         <input type="text" class="form-control" id="new_name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="new_contact" class="form-label">Contact</label>
+                        <label for="new_contact" class="form-label">Kontak</label>
                         <input type="text" class="form-control" id="new_contact" name="contact">
                     </div>
                     <div class="mb-3">
-                        <label for="new_address" class="form-label">Address</label>
+                        <label for="new_address" class="form-label">Alamat</label>
                         <textarea class="form-control" id="new_address" name="address"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="saveNewCustomer()">Save Customer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" onclick="saveNewCustomer()">Simpan</button>
             </div>
         </div>
     </div>
@@ -220,7 +220,7 @@
     const transactionType = "{{ request('type', 'sale') }}";
 
     function getProductOptions() {
-        let options = '<option value="">Select Product...</option>';
+        let options = '<option value="">Pilih Produk...</option>';
         products.forEach(p => {
              // Determine price based on transaction type
              let price = transactionType === 'purchase' ? p.buy_price : p.sell_price;
@@ -266,7 +266,7 @@
                 </div>
             </td>
             <td class="product-removal">
-                <a href="javascript:void(0)" class="btn btn-success" onclick="removeItem(this)">Delete</a>
+                <a href="javascript:void(0)" class="btn btn-success" onclick="removeItem(this)">Hapus</a>
             </td>
         `;
         tr.innerHTML = template;
@@ -425,14 +425,14 @@
                 form.reset();
 
                 // Show success message
-                alert('Customer added successfully!');
+                alert('Pelanggan berhasil ditambahkan!');
             } else {
-                alert('Error adding customer');
+                alert('Gagal menambahkan pelanggan');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error adding customer. Please check input.');
+            alert('Gagal menambahkan pelanggan. Silakan periksa input.');
         });
     }
     
@@ -451,7 +451,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Please select a valid " + (transactionType === 'purchase' ? 'Supplier' : 'Customer') + "."
+                text: "Harap pilih " + (transactionType === 'purchase' ? 'Pemasok' : 'Pelanggan') + " yang valid."
             });
             return;
         }
@@ -461,8 +461,8 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'error',
-                title: 'Payment Error',
-                text: "Amount Paid (Bayar) is less than Total Amount. Please change Payment Status to 'Partial' or 'Unpaid', or enter the correct amount."
+                title: 'Kesalahan Pembayaran',
+                text: "Jumlah Dibayar kurang dari Total Jumlah. Harap ubah Status Pembayaran menjadi 'Sebagian' atau 'Belum Lunas', atau masukkan jumlah yang benar."
             });
             return;
         }
@@ -472,8 +472,8 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'error',
-                title: 'Invalid Customer',
-                text: "For Unpaid or Partial transactions, you must select a valid Customer (Cannot be Umum/Walk-in)."
+                title: 'Pelanggan Tidak Valid',
+                text: "Untuk transaksi Belum Lunas atau Sebagian, Anda harus memilih Pelanggan yang valid (Tidak boleh Umum/Walk-in)."
             });
             return;
         }

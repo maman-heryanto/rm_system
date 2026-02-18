@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction #{{ $transaction->id }} - Print</title>
+    <title>Transaksi #{{ $transaction->id }} - Cetak</title>
     <style>
         @page {
             size: 58mm auto;
@@ -95,9 +95,9 @@
         <div class="divider"></div>
 
         <div class="details">
-            <div>Date: {{ $transaction->transaction_date->format('d/m/Y H:i') }}</div>
-            <div>Trx ID: #{{ $transaction->id }}</div>
-            <div>Cust: {{ $transaction->customer->name ?? 'General' }}</div>
+            <div>Tanggal: {{ $transaction->transaction_date->format('d/m/Y H:i') }}</div>
+            <div>ID Trx: #{{ $transaction->id }}</div>
+            <div>Plgn: {{ $transaction->customer->name ?? 'Umum' }}</div>
         </div>
 
         <div class="divider"></div>
@@ -125,27 +125,27 @@
                 <div>Rp {{ number_format($transaction->total_amount + $transaction->discount, 0, ',', '.') }}</div>
             </div>
             <div class="item-row">
-                <div>Discount</div>
+                <div>Diskon</div>
                 <div>- Rp {{ number_format($transaction->discount, 0, ',', '.') }}</div>
             </div>
             
             <div class="total-row" style="margin-top: 5px; border-top: 1px dashed #333; padding-top: 5px;">
-                <div>Total Amount</div>
+                <div>Total Tagihan</div>
                 <div>Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</div>
             </div>
 
             @if($transaction->debt)
             <div class="item-row" style="margin-top: 5px;">
-                <div>Amount Paid (Bayar)</div>
+                <div>Jumlah Dibayar</div>
                 <div>Rp {{ number_format($transaction->debt->amount_paid, 0, ',', '.') }}</div>
             </div>
             <div class="item-row">
-                <div>Change (Kembalian)</div>
+                <div>Kembalian</div>
                 <div>Rp {{ number_format(max(0, $transaction->debt->amount_paid - $transaction->debt->amount_total), 0, ',', '.') }}</div>
             </div>
             @if($transaction->debt->status !== 'paid')
             <div class="item-row">
-                <div>Remaining</div>
+                <div>Sisa</div>
                 <div>Rp {{ number_format($transaction->debt->amount_total - $transaction->debt->amount_paid, 0, ',', '.') }}</div>
             </div>
             @endif
@@ -158,8 +158,8 @@
             <p>Terima Kasih Telah Berbelanja Di Toko Kami</p>
         </div>
 
-        <button class="no-print" onclick="window.print()" style="display: block; width: 100%; padding: 10px; margin-top: 20px; cursor: pointer;">Print Again</button>
-        <a href="{{ route('transactions.show', $transaction->id) }}" class="no-print" style="display: block; text-align: center; margin-top: 10px; text-decoration: none; color: blue;">Back</a>
+        <button class="no-print" onclick="window.print()" style="display: block; width: 100%; padding: 10px; margin-top: 20px; cursor: pointer;">Cetak Lagi</button>
+        <a href="{{ route('transactions.show', $transaction->id) }}" class="no-print" style="display: block; text-align: center; margin-top: 10px; text-decoration: none; color: blue;">Kembali</a>
     </div>
 </body>
 </html>

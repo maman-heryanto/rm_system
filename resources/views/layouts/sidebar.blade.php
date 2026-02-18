@@ -33,45 +33,45 @@
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('dashboard') }}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboard</span>
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dasbor</span>
                     </a>
                 </li>
 
-                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Management</span></li>
+                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Manajemen</span></li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('inventory.index') }}">
-                        <i class="ri-store-3-line"></i> <span data-key="t-inventory">Inventory Ledger</span>
+                        <i class="ri-store-3-line"></i> <span data-key="t-inventory">Buku Stok</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('transactions.index', ['type' => 'sale']) }}">
-                        <i class="ri-exchange-dollar-line"></i> <span data-key="t-sales">Sales (Penjualan)</span>
+                        <i class="ri-exchange-dollar-line"></i> <span data-key="t-sales">Penjualan</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('debts.index') }}">
-                        <i class="ri-book-mark-line"></i> <span data-key="t-debts">Debts (Piutang)</span>
+                        <i class="ri-book-mark-line"></i> <span data-key="t-debts">Hutang/Piutang</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('customers.index') }}">
-                        <i class="ri-user-line"></i> <span data-key="t-customers">Customers</span>
+                        <i class="ri-user-line"></i> <span data-key="t-customers">Pelanggan</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('transactions.index', ['type' => 'purchase']) }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-purchases">Purchases (Pembelian)</span>
+                        <i class="ri-shopping-cart-line"></i> <span data-key="t-purchases">Pembelian</span>
                     </a>
                 </li>
 
                  <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('products.index') }}">
-                        <i class="ri-shopping-bag-3-line"></i> <span data-key="t-products">Products</span>
+                        <i class="ri-shopping-bag-3-line"></i> <span data-key="t-products">Produk</span>
                     </a>
                 </li>
 

@@ -6,10 +6,10 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Inventory Value Ledger</h4>
+            <h4 class="mb-sm-0">Buku Stok Inventaris</h4>
             <div class="page-title-right">
                 <a href="{{ route('inventory.create') }}" class="btn btn-success btn-sm">
-                    <i class="ri-add-line align-bottom me-1"></i> Add Entry
+                    <i class="ri-add-line align-bottom me-1"></i> Tambah Entri
                 </a>
             </div>
         </div>
@@ -24,13 +24,13 @@
                     <table class="table table-striped table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Item Details</th>
-                                <th scope="col" class="text-end">Purchase (In)</th>
-                                <th scope="col" class="text-end">Sales (Out)</th>
-                                <th scope="col" class="text-end">Balance</th>
-                                <th scope="col" class="text-end">Action</th>
+                                <th scope="col">Tanggal</th>
+                                <th scope="col">Tipe</th>
+                                <th scope="col">Detail Barang</th>
+                                <th scope="col" class="text-end">Pembelian (Masuk)</th>
+                                <th scope="col" class="text-end">Penjualan (Keluar)</th>
+                                <th scope="col" class="text-end">Saldo</th>
+                                <th scope="col" class="text-end">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,11 +39,11 @@
                                 <td>{{ $ledger->date->format('d M Y') }}</td>
                                 <td>
                                     @if($ledger->type == 'initial')
-                                        <span class="badge bg-info">Initial</span>
+                                        <span class="badge bg-info">Awal</span>
                                     @elseif($ledger->type == 'purchase')
-                                        <span class="badge bg-success">Purchase</span>
+                                        <span class="badge bg-success">Pembelian</span>
                                     @else
-                                        <span class="badge bg-danger">Sale</span>
+                                        <span class="badge bg-danger">Penjualan</span>
                                     @endif
                                 </td>
                                 <td>
@@ -51,9 +51,9 @@
                                         <div class="fw-medium">{{ $ledger->item_name }}</div>
                                         <div class="text-muted fs-12">{{ $ledger->quantity }} x Rp {{ number_format($ledger->unit_price, 0, ',', '.') }}</div>
                                     @elseif($ledger->type == 'initial')
-                                        Initial Balance
+                                        Saldo Awal
                                     @else
-                                        Direct Sales Input
+                                        Input Penjualan Langsung
                                     @endif
                                 </td>
                                 <td class="text-end text-success">
@@ -86,7 +86,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center">No inventory records found.</td>
+                                <td colspan="6" class="text-center">Tidak ada catatan inventaris yang ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>

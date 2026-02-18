@@ -6,12 +6,12 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Transactions</h4>
+            <h4 class="mb-sm-0">Transaksi</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Transactions</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dasbor</a></li>
+                    <li class="breadcrumb-item active">Transaksi</li>
                 </ol>
             </div>
         </div>
@@ -24,22 +24,22 @@
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0 flex-grow-1">
                     @if(request('type') == 'sale')
-                        Sales History (Penjualan)
+                        Riwayat Penjualan
                     @elseif(request('type') == 'purchase')
-                        Purchase History (Pembelian)
+                        Riwayat Pembelian
                     @else
-                        Transaction History
+                        Riwayat Transaksi
                     @endif
                 </h5>
                 <div>
                     @if(request('type') != 'purchase')
                      <a href="{{ route('transactions.create', ['type' => 'sale']) }}" class="btn btn-success add-btn">
-                        <i class="ri-add-line align-bottom me-1"></i> New Sale
+                        <i class="ri-add-line align-bottom me-1"></i> Penjualan Baru
                     </a>
                     @endif
                     @if(request('type') != 'sale')
                     <a href="{{ route('transactions.create', ['type' => 'purchase']) }}" class="btn btn-info add-btn">
-                        <i class="ri-add-line align-bottom me-1"></i> New Purchase
+                        <i class="ri-add-line align-bottom me-1"></i> Pembelian Baru
                     </a>
                     @endif
                 </div>
@@ -49,12 +49,12 @@
                     <div class="row g-3">
                         <div class="col-xl-3 col-sm-6">
                             <div class="search-box">
-                                <input type="text" class="form-control search flatpickr-date" name="start_date" value="{{ request('start_date') }}" placeholder="Start Date (dd-mm-yyyy)">
+                                <input type="text" class="form-control search flatpickr-date" name="start_date" value="{{ request('start_date') }}" placeholder="Tanggal Mulai (dd-mm-yyyy)">
                             </div>
                         </div>
                         <div class="col-xl-3 col-sm-6">
                             <div class="search-box">
-                                <input type="text" class="form-control search flatpickr-date" name="end_date" value="{{ request('end_date') }}" placeholder="End Date (dd-mm-yyyy)">
+                                <input type="text" class="form-control search flatpickr-date" name="end_date" value="{{ request('end_date') }}" placeholder="Tanggal Akhir (dd-mm-yyyy)">
                             </div>
                         </div>
                         <div class="col-xl-3 col-sm-6">
@@ -62,11 +62,11 @@
                                 <select class="form-control" name="customer_id">
                                     <option value="">
                                         @if(request('type') == 'sale')
-                                            Filter Customer
+                                            Filter Pelanggan
                                         @elseif(request('type') == 'purchase')
-                                            Filter Supplier
+                                            Filter Pemasok
                                         @else
-                                            All Customers/Suppliers
+                                            Semua Pelanggan/Pemasok
                                         @endif
                                     </option>
                                     @foreach($customers as $customer)
@@ -88,12 +88,12 @@
                     <table class="table table-nowrap align-middle table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Customer/Supplier</th>
+                                <th>Tanggal</th>
+                                <th>Tipe</th>
+                                <th>Pelanggan/Pemasok</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,9 +102,9 @@
                                 <td>{{ $transaction->transaction_date->format('d-m-Y') }}</td>
                                 <td>
                                     @if($transaction->type === 'sale')
-                                        <span class="badge bg-success-subtle text-success text-uppercase">Sale</span>
+                                        <span class="badge bg-success-subtle text-success text-uppercase">Penjualan</span>
                                     @else
-                                        <span class="badge bg-primary-subtle text-primary text-uppercase">Purchase</span>
+                                        <span class="badge bg-primary-subtle text-primary text-uppercase">Pembelian</span>
                                     @endif
                                 </td>
                                 <td>{{ $transaction->customer->name ?? '-' }}</td>
@@ -112,16 +112,17 @@
                                     <span class="fw-semibold">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</span>
                                 </td>
                                 <td>
+                                <td>
                                     @if($transaction->debt)
                                         @if($transaction->debt->status === 'paid')
-                                            <span class="badge bg-success-subtle text-success text-uppercase">Paid</span>
+                                            <span class="badge bg-success-subtle text-success text-uppercase">Lunas</span>
                                         @elseif($transaction->debt->status === 'partial')
-                                            <span class="badge bg-warning-subtle text-warning text-uppercase">Partial</span>
+                                            <span class="badge bg-warning-subtle text-warning text-uppercase">Sebagian</span>
                                         @else
-                                            <span class="badge bg-danger-subtle text-danger text-uppercase">Unpaid</span>
+                                            <span class="badge bg-danger-subtle text-danger text-uppercase">Belum Lunas</span>
                                         @endif
                                     @else
-                                        <span class="badge bg-success-subtle text-success text-uppercase">Paid</span>
+                                        <span class="badge bg-success-subtle text-success text-uppercase">Lunas</span>
                                     @endif
                                 </td>
                                 <td>
@@ -144,7 +145,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center">No transactions found.</td>
+                                <td colspan="6" class="text-center">Tidak ada transaksi ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>

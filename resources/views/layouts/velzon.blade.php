@@ -72,7 +72,7 @@
     <div id="preloader">
         <div id="status">
             <div class="spinner-border text-primary avatar-sm" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">Memuat...</span>
             </div>
         </div>
     </div>
@@ -100,7 +100,7 @@
         @if(session('success'))
             Swal.fire({
                 icon: 'success',
-                title: 'Success',
+                title: 'Berhasil',
                 text: "{{ session('success') }}",
                 timer: 3000,
                 showConfirmButton: false
@@ -110,23 +110,24 @@
         @if(session('error'))
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
+                title: 'Gagal',
                 text: "{{ session('error') }}",
             });
         @endif
 
         // Global Delete Confirmation
-        document.addEventListener('submit', function(e) {
+                document.addEventListener('submit', function(e) {
             if (e.target.classList.contains('delete-form')) {
                 e.preventDefault();
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: 'Apakah Anda yakin?',
+                    text: "Anda tidak akan dapat mengembalikan ini!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         e.target.submit();

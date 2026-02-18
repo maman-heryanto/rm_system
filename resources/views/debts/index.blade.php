@@ -6,12 +6,12 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Accounts Receivable (Debts)</h4>
+            <h4 class="mb-sm-0">Piutang Usaha (Hutang)</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Debts</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dasbor</a></li>
+                    <li class="breadcrumb-item active">Hutang</li>
                 </ol>
             </div>
         </div>
@@ -22,20 +22,21 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0">Debt List</h5>
+                <h5 class="card-title mb-0">Daftar Hutang</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-nowrap align-middle table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Customer</th>
-                                <th>Transaction Date</th>
-                                <th>Total Amount</th>
-                                <th>Amount Paid</th>
-                                <th>Remaining</th>
+                            <tr>
+                                <th>Pelanggan</th>
+                                <th>Tanggal Transaksi</th>
+                                <th>Total Jumlah</th>
+                                <th>Jumlah Dibayar</th>
+                                <th>Sisa</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,17 +49,17 @@
                                 <td class="text-danger fw-bold">Rp {{ number_format($debt->amount_total - $debt->amount_paid, 0, ',', '.') }}</td>
                                 <td>
                                     @if($debt->status === 'paid')
-                                        <span class="badge bg-success-subtle text-success text-uppercase">Paid</span>
+                                        <span class="badge bg-success-subtle text-success text-uppercase">Lunas</span>
                                     @elseif($debt->status === 'partial')
-                                        <span class="badge bg-warning-subtle text-warning text-uppercase">Partial</span>
+                                        <span class="badge bg-warning-subtle text-warning text-uppercase">Sebagian</span>
                                     @else
-                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Unpaid</span>
+                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Belum Bayar</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
                                         <a href="{{ route('debts.show', $debt->id) }}" class="btn btn-sm btn-primary">
-                                            Details & Pay
+                                            Detail & Bayar
                                         </a>
                                         <form action="{{ route('debts.destroy', $debt->id) }}" method="POST" class="delete-form">
                                             @csrf
@@ -72,7 +73,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="text-center">No debts found.</td>
+                                <td colspan="7" class="text-center">Tidak ada hutang ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>
