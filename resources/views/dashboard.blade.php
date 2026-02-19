@@ -9,10 +9,10 @@
             <h4 class="mb-sm-0">Dasbor</h4>
 
             <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dasbor</a></li>
-                    <li class="breadcrumb-item active">Dasbor</li>
-                </ol>
+                <form action="{{ route('dashboard') }}" method="GET" class="d-flex align-items-center gap-2">
+                    <label for="date" class="form-label mb-0">Tanggal:</label>
+                    <input type="date" class="form-control" name="date" id="date" value="{{ $date->format('Y-m-d') }}" onchange="this.form.submit()">
+                </form>
             </div>
 
         </div>
@@ -27,7 +27,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-info mb-0">Total Pendapatan (Hari Ini)</p>
+                        <p class="text-uppercase fw-medium text-info mb-0">Total Pendapatan ({{ $date->format('d M Y') }})</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -50,7 +50,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-success mb-0">Lunas (Hari Ini)</p>
+                        <p class="text-uppercase fw-medium text-success mb-0">Lunas ({{ $date->format('d M Y') }})</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -73,7 +73,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-danger mb-0">Belum Bayar (Hari Ini)</p>
+                        <p class="text-uppercase fw-medium text-danger mb-0">Belum Bayar ({{ $date->format('d M Y') }})</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
@@ -96,7 +96,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <p class="text-uppercase fw-medium text-warning mb-0">Cicilan (Hari Ini)</p>
+                        <p class="text-uppercase fw-medium text-warning mb-0">Cicilan ({{ $date->format('d M Y') }})</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-end justify-content-between mt-4">
