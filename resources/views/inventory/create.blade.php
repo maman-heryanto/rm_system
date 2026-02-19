@@ -19,11 +19,26 @@
                         </div>
                         <div class="col-md-6">
                             <label for="type" class="form-label">Tipe</label>
-                            <select class="form-select" id="type" name="type" required onchange="toggleFields()">
-                                <option value="purchase" {{ old('type') == 'purchase' ? 'selected' : '' }}>Pembelian (Masuk)</option>
-                                <option value="sale" {{ old('type') == 'sale' ? 'selected' : '' }}>Penjualan (Keluar)</option>
-                                <option value="initial" {{ old('type') == 'initial' ? 'selected' : '' }}>Saldo Awal</option>
-                            </select>
+                            <div class="d-flex gap-3 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typePrice" value="purchase" {{ old('type') == 'purchase' ? 'checked' : '' }} onchange="toggleFields()" required>
+                                    <label class="form-check-label" for="typePrice">
+                                        Pembelian (Masuk)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeSale" value="sale" {{ old('type') == 'sale' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeSale">
+                                        Penjualan (Keluar)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeInitial" value="initial" {{ old('type', 'initial') == 'initial' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeInitial">
+                                        Saldo Awal
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Purchase Fields -->
@@ -72,7 +87,8 @@
 
 <script>
     function toggleFields() {
-        const type = document.getElementById('type').value;
+        const typeInput = document.querySelector('input[name="type"]:checked');
+        const type = typeInput ? typeInput.value : 'initial';
         const purchaseFields = document.getElementById('purchase_fields');
         const amountField = document.getElementById('amount_field');
         const amountLabel = document.getElementById('amount_label');
