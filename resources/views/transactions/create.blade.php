@@ -160,7 +160,7 @@
     <div class="row g-0 pos-container card mb-0 overflow-hidden shadow-sm">
         
         <!-- LEFT COLUMN: Product Catalog -->
-        <div class="col-lg-8 border-end h-100 d-flex flex-column bg-light-subtle">
+        <div class="col-lg-7 border-end h-100 d-flex flex-column bg-light-subtle">
             <!-- Search Header -->
             <div class="p-3 bg-white border-bottom sticky-top" style="z-index: 10;">
                 <div class="input-group">
@@ -171,7 +171,7 @@
 
             <!-- Product Grid -->
             <div class="p-3 scrollable-content" id="catalogRegion">
-                <div class="row row-cols-xxl-4 row-cols-xl-3 row-cols-lg-3 row-cols-md-3 row-cols-2 g-2" id="productGrid">
+                <div class="row row-cols-xl-3 row-cols-lg-3 row-cols-md-3 row-cols-2 g-2" id="productGrid">
                     <!-- Javascript will render products here -->
                 </div>
 
@@ -189,7 +189,7 @@
 
 
         <!-- RIGHT COLUMN: Cart (Sidebar) -->
-        <div class="col-lg-4 cart-sidebar" id="cartSidebar">
+        <div class="col-lg-5 cart-sidebar" id="cartSidebar">
             <!-- Mobile Toggle Header -->
             <div class="d-lg-none d-flex align-items-center justify-content-between p-3 bg-primary text-white">
                 <h5 class="mb-0 text-white">Keranjang Belanja</h5>
