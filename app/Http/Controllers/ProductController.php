@@ -82,10 +82,18 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = \App\Models\Product::findOrFail($id);
-        $product->delete();
+        try {
+            $product = \App\Models\Product::findOrFail($id);
+            $product->delete();
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product deleted successfully');
+            return redirect()->route('products.index')
+                ->with('success', 'Produk berhasil dihapus');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '23000') {
+                return redirect()->route('products.index')
+                    ->with('error', 'Produk tidak dapat dihapus karena masih digunakan dalam transaksi.');
+            }
+            throw $e;
+        }
     }
 }
