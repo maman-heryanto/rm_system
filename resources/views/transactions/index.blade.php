@@ -152,6 +152,20 @@
                             </tr>
                             @endforelse
                         </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="3" class="text-end">Total Halaman Ini</th>
+                                <th>
+                                    <span class="fw-bold">Rp {{ number_format($transactions->sum('total_amount'), 0, ',', '.') }}</span>
+                                </th>
+                                <th>
+                                    <span class="fw-bold">Rp {{ number_format($transactions->sum(function($transaction) {
+                                        return ($transaction->debt && $transaction->debt->status !== 'paid') ? $transaction->debt->amount_paid : $transaction->total_amount;
+                                    }), 0, ',', '.') }}</span>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="mt-3">
