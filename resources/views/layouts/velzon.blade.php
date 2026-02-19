@@ -7,7 +7,7 @@
     <meta content="Sales and Inventory Management System" name="description" />
     <meta content="RM Mandiri" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo-rm.png') }}">
 
     <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
