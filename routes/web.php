@@ -18,3 +18,4 @@ Route::delete('/payments/{id}', [App\Http\Controllers\PaymentController::class ,
 Route::get('/transactions/{id}/print', [App\Http\Controllers\TransactionController::class , 'print'])->name('transactions.print');
 
 Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class , 'index'])->name('dashboard');
+Route::resource('expenses', App\Http\Controllers\ExpenseController::class);

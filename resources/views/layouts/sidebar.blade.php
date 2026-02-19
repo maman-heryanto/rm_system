@@ -79,6 +79,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('expenses.index') }}">
+                        <i class="ri-wallet-3-line"></i> <span data-key="t-expenses">Pengeluaran</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
         <!-- Sidebar -->
