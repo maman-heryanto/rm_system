@@ -92,7 +92,6 @@
                                 <th>Tipe</th>
                                 <th>Pelanggan/Pemasok</th>
                                 <th>Total</th>
-                                <th>Dibayar</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
