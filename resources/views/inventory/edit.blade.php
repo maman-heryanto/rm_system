@@ -60,10 +60,15 @@
 
                         <!-- Purchase / Sale Item Fields -->
                         <div id="purchase_fields" style="display: none;">
-                            <div class="col-12 mb-3">
-                                <label for="item_name" class="form-label">Nama Barang</label>
-                                <select class="form-select select2-item-name" id="item_name" name="item_name" style="width: 100%;">
-                                    <option value="">Pilih atau ketik nama barang...</option>
+                            <div class="col-12 mb-3" id="purchase_item_container" style="display: none;">
+                                <label for="item_name_purchase" class="form-label">Nama Barang</label>
+                                <input type="text" class="form-control" id="item_name_purchase" name="item_name" value="{{ old('item_name', $ledger->item_name) }}" placeholder="Ketik nama barang...">
+                            </div>
+
+                            <div class="col-12 mb-3" id="sale_item_container" style="display: none;">
+                                <label for="item_name_sale" class="form-label">Nama Barang</label>
+                                <select class="form-select select2-item-name" id="item_name_sale" name="item_name" style="width: 100%;">
+                                    <option value="">Pilih barang...</option>
                                     @php $itemFound = false; @endphp
                                     @foreach($existingItems as $itemName)
                                         <option value="{{ $itemName }}" {{ old('item_name', $ledger->item_name) == $itemName ? 'selected' : '' }}>{{ $itemName }}</option>
@@ -139,10 +144,22 @@
         // Hide all fields first
         purchaseFields.style.display = 'none';
         amountField.style.display = 'none';
+        document.getElementById('purchase_item_container').style.display = 'none';
+        document.getElementById('sale_item_container').style.display = 'none';
+        document.getElementById('item_name_purchase').disabled = true;
+        document.getElementById('item_name_sale').disabled = true;
 
-        if (type === 'purchase' || type === 'sale_item') {
+        if (type === 'purchase') {
             purchaseFields.style.display = 'block';
-            let colorClass = type === 'purchase' ? 'text-success' : 'text-danger';
+            document.getElementById('purchase_item_container').style.display = 'block';
+            document.getElementById('item_name_purchase').disabled = false;
+            let colorClass = 'text-success';
+            document.getElementById('purchase_total_display').className = 'fs-4 fw-bold ' + colorClass;
+        } else if (type === 'sale_item') {
+            purchaseFields.style.display = 'block';
+            document.getElementById('sale_item_container').style.display = 'block';
+            document.getElementById('item_name_sale').disabled = false;
+            let colorClass = 'text-danger';
             document.getElementById('purchase_total_display').className = 'fs-4 fw-bold ' + colorClass;
         } else {
             amountField.style.display = 'block';
@@ -161,8 +178,8 @@
         // Fetch validation info
         maxQuantity = null;
         minPrice = null;
-        if (type === 'sale_item' && $('#item_name').val()) {
-            fetchItemInfo($('#item_name').val());
+        if (type === 'sale_item' && $('#item_name_sale').val()) {
+            fetchItemInfo($('#item_name_sale').val());
         }
     }
 
@@ -263,13 +280,12 @@
 
     // Run on load
     toggleFields();
-    formatInitialValues();
 
     $(document).ready(function() {
         if ($('.select2-item-name').length) {
             $('.select2-item-name').select2({
                 tags: true, /* Allows adding new items not in the list */
-                placeholder: "Pilih atau ketik nama barang...",
+                placeholder: "Pilih barang...",
                 allowClear: true
             }).on('change', function() {
                 const typeInput = document.querySelector('input[name="type"]:checked');

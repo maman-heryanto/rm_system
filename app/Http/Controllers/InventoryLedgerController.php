@@ -109,7 +109,7 @@ class InventoryLedgerController extends Controller
 
         $type = $request->type;
         $amount = $request->amount;
-        $itemName = $request->item_name;
+        $itemName = $request->item_name ? strtoupper($request->item_name) : null;
 
         if ($type == 'purchase' || $type == 'sale_item') {
             $amount = $request->quantity * $request->unit_price;
@@ -189,7 +189,7 @@ class InventoryLedgerController extends Controller
 
         $type = $request->type;
         $amount = $request->amount;
-        $itemName = $request->item_name;
+        $itemName = $request->item_name ? strtoupper($request->item_name) : null;
 
         if ($type == 'purchase' || $type == 'sale_item') {
             $amount = $request->quantity * $request->unit_price;
