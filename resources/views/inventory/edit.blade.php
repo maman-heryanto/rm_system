@@ -1,6 +1,6 @@
 @extends('layouts.velzon')
 
-@section('title', 'Ubah Entri Buku Penjualan Manual')
+@section('title', 'Ubah Entri Buku Penjualan')
 @section('title', 'Ubah Entri Inventaris')
 
 @section('content')

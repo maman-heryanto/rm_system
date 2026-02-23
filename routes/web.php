@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('inventory.index');
 });
 
 Route::resource('products', \App\Http\Controllers\ProductController::class);

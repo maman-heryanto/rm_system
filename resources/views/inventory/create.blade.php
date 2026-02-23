@@ -1,6 +1,6 @@
 @extends('layouts.velzon')
 
-@section('title', 'Tambah Entri Buku Penjualan Manual')
+@section('title', 'Tambah Entri Buku Penjualan')
 
 @section('content')
 <div class="row justify-content-center">
