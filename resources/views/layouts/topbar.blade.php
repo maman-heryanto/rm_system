@@ -57,7 +57,7 @@
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                            <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/logo-rm.png') }}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name ?? 'Guest' }}</span>
                                 <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">
@@ -69,7 +69,7 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">Selamat Datang {{ explode(' ', auth()->user()->name ?? 'Guest')[0] }}!</h6>
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profil</span></a>
+                        {{-- <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profil</span></a> --}}
                         <div class="dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="POST" class="px-3 py-2">
                             @csrf
