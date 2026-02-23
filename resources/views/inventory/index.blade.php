@@ -42,13 +42,13 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="fw-medium text-muted mb-0">Total Penjualan</p>
-                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{ $totalPenjualan }}">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</span></h2>
+                        <p class="fw-medium text-muted mb-0">Total Stock</p>
+                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{ $totalStock }}">Rp {{ number_format($totalStock, 0, ',', '.') }}</span></h2>
                     </div>
                     <div>
                         <div class="avatar-sm flex-shrink-0">
                             <span class="avatar-title bg-success-subtle rounded-circle fs-2">
-                                <i class="ri-shopping-cart-2-line text-success"></i>
+                                <i class="ri-inbox-archive-line text-success"></i>
                             </span>
                         </div>
                     </div>
