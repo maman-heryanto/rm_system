@@ -51,12 +51,12 @@
                         <div id="purchase_fields" style="display: none;">
                             <div class="col-12 mb-3">
                                 <label for="item_name" class="form-label">Nama Barang</label>
-                                <input type="text" class="form-control" id="item_name" name="item_name" value="{{ old('item_name') }}" list="existingItemsList" autocomplete="off" placeholder="Pilih atau ketik nama barang...">
-                                <datalist id="existingItemsList">
+                                <select class="form-select select2-item-name" id="item_name" name="item_name" style="width: 100%;">
+                                    <option value="">Pilih atau ketik nama barang...</option>
                                     @foreach($existingItems as $itemName)
-                                        <option value="{{ $itemName }}">
+                                        <option value="{{ $itemName }}" {{ old('item_name') == $itemName ? 'selected' : '' }}>{{ $itemName }}</option>
                                     @endforeach
-                                </datalist>
+                                </select>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -164,5 +164,15 @@
 
     // Run on load
     toggleFields();
+
+    $(document).ready(function() {
+        if ($('.select2-item-name').length) {
+            $('.select2-item-name').select2({
+                tags: true, /* Allows adding new items not in the list */
+                placeholder: "Pilih atau ketik nama barang...",
+                allowClear: true
+            });
+        }
+    });
 </script>
 @endsection
