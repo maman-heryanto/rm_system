@@ -304,6 +304,35 @@
 
     function validateInputs() {
         const typeInput = document.querySelector('input[name="type"]:checked');
+        
+        if (typeInput && typeInput.value === 'purchase') {
+            const tbody = document.querySelector('#purchase_items_table tbody');
+            const rows = tbody.querySelectorAll('tr');
+            let hasValidItem = false;
+            let errorMessage = '';
+            
+            rows.forEach((row) => {
+                const nameInput = row.querySelector('input[name^="items"][name$="[item_name]"]');
+                const qtyVal = row.querySelector('.purchase-qty-val');
+                const priceVal = row.querySelector('.purchase-price-val');
+                
+                if (nameInput && qtyVal && priceVal) {
+                    const name = nameInput.value.trim();
+                    const qty = parseFloat(qtyVal.value) || 0;
+                    const price = parseFloat(priceVal.value) || 0;
+                    
+                    if (name !== '' && qty > 0 && price > 0) {
+                        hasValidItem = true;
+                    }
+                }
+            });
+            
+            if (!hasValidItem) {
+                return { valid: false, message: 'Silakan isi minimal 1 barang dengan Nama, Jumlah, dan Harga Satuan yang valid.' };
+            }
+            return { valid: true };
+        }
+
         if (typeInput && typeInput.value === 'sale_item') {
             const qtyInput = document.getElementById('quantity');
             const priceInput = document.getElementById('unit_price');
@@ -320,22 +349,25 @@
             $('#price-error').remove();
 
             let hasError = false;
+            let errorMessage = 'Terdapat peringatan pada input. Silakan periksa kembali Jumlah atau Harga Satuan.';
 
             if (maxQuantity !== null && qty > maxQuantity) {
                 qtyDisplay.classList.add('is-invalid');
                 $(qtyDisplay).after('<div id="qty-error" class="invalid-feedback d-block">Stok tidak mencukupi. Maks: ' + maxQuantity + '</div>');
                 hasError = true;
+                errorMessage = 'Stok tidak mencukupi. Maks: ' + maxQuantity;
             }
 
             if (minPrice !== null && price > 0 && price < minPrice) {
                 priceDisplay.classList.add('is-invalid');
                 $(priceDisplay).after('<div id="price-error" class="invalid-feedback d-block">Harga tidak boleh kurang dari harga beli: Rp ' + new Intl.NumberFormat('id-ID').format(minPrice) + '</div>');
                 hasError = true;
+                errorMessage = 'Harga tidak boleh kurang dari harga beli: Rp ' + new Intl.NumberFormat('id-ID').format(minPrice);
             }
 
-            return !hasError;
+            return { valid: !hasError, message: errorMessage };
         }
-        return true;
+        return { valid: true };
     }
 
     function updateInput(element, hiddenId) {
@@ -375,7 +407,7 @@
         const qty = parseFloat(document.getElementById('quantity').value) || 0;
         const price = parseFloat(document.getElementById('unit_price').value) || 0;
         const total = qty * price;
-        document.getElementById('purchase_total_display').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
+        document.getElementById('sale_total_display').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
     }
 
     // Run on load
@@ -396,9 +428,10 @@
         }
 
         $('form').on('submit', function(e) {
-            if (!validateInputs()) {
+            const validation = validateInputs();
+            if (!validation.valid) {
                 e.preventDefault();
-                alert('Terdapat peringatan pada input. Silakan periksa kembali Jumlah atau Harga Satuan.');
+                alert(validation.message || 'Harap periksa kembali isian form Anda.');
             }
         });
     });

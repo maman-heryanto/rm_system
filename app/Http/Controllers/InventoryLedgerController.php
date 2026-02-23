@@ -158,6 +158,11 @@ class InventoryLedgerController extends Controller
             if ($type === 'purchase' && $request->has('items') && is_array($request->items)) {
                 // Loop through array of items for multiple purchases
                 foreach ($request->items as $item) {
+                    // Skip if the row is completely empty or missing required fields
+                    if (empty($item['item_name']) || empty($item['quantity']) || empty($item['unit_price'])) {
+                        continue;
+                    }
+
                     $itemName = strtoupper($item['item_name']);
                     $quantity = $item['quantity'];
                     $unitPrice = $item['unit_price'];
