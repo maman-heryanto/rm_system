@@ -33,6 +33,22 @@
                     <div class="col-auto">
                         <input type="date" id="end_date" name="end_date" class="form-control" value="{{ $endDate }}">
                     </div>
+                    
+                    @if(auth()->user() && auth()->user()->isSuperAdmin())
+                    <div class="col-auto">
+                        <label for="branch_id" class="col-form-label">Cabang:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select name="branch_id" id="branch_id" class="form-select">
+                            <option value="">-- Semua Cabang --</option>
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $selectedBranch == $branch->id ? 'selected' : '' }}>
+                                    {{ $branch->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary"><i class="ri-filter-2-line align-bottom me-1"></i> Filter</button>
                     </div>
@@ -136,6 +152,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">Tanggal</th>
+                                @if(auth()->user() && auth()->user()->isSuperAdmin())
+                                    <th scope="col">Cabang</th>
+                                @endif
                                 <th scope="col">Tipe</th>
                                 <th scope="col">Detail Barang</th>
                                 <th scope="col" class="text-end">Pembelian (Masuk)</th>
@@ -148,6 +167,9 @@
                             @forelse($ledgers as $ledger)
                             <tr>
                                 <td>{{ $ledger->date->translatedFormat('d F Y') }}</td>
+                                @if(auth()->user() && auth()->user()->isSuperAdmin())
+                                    <td>{{ $ledger->branch->name ?? '-' }}</td>
+                                @endif
                                 <td>
                                     @if($ledger->type == 'initial')
                                         <span class="badge bg-info">Awal</span>

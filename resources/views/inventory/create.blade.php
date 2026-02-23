@@ -13,11 +13,27 @@
                 <form action="{{ route('inventory.store') }}" method="POST">
                     @csrf
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="date" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="date" name="date" value="{{ old('date', now()->format('Y-m-d')) }}" required>
                         </div>
-                        <div class="col-md-6">
+                        
+                        @if(auth()->user() && auth()->user()->isSuperAdmin())
+                        <div class="col-md-4">
+                            <label for="branch_id" class="form-label">Cabang Transaksi</label>
+                            <select name="branch_id" id="branch_id" class="form-select" onchange="if($('#item_name_sale').val()) fetchItemInfo($('#item_name_sale').val());" required>
+                                <option value="">-- Pilih Cabang --</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                        {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                        @else
+                        <div class="col-md-8">
+                        @endif
                             <label for="type" class="form-label">Tipe</label>
                             <div class="d-flex flex-column gap-2 mt-2">
                                 <div class="form-check">
@@ -157,9 +173,15 @@
 
     function fetchItemInfo(itemName) {
         if (!itemName) return;
+        
+        let branchId = '';
+        if (document.getElementById('branch_id')) {
+            branchId = document.getElementById('branch_id').value;
+        }
+
         $.ajax({
             url: "{{ route('api.inventory.item_info') }}",
-            data: { item_name: itemName },
+            data: { item_name: itemName, branch_id: branchId },
             success: function(res) {
                 maxQuantity = res.stock;
                 minPrice = res.base_price;

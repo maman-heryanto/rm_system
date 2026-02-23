@@ -44,6 +44,14 @@
                     </a>
                 </li>
 
+                @if(auth()->check() && auth()->user()->isSuperAdmin())
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('users.index') }}">
+                        <i class="ri-group-line"></i> <span data-key="t-users">Manajemen Pengguna</span>
+                    </a>
+                </li>
+                @endif
+
                 {{-- coming soon --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">

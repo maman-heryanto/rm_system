@@ -28,5 +28,10 @@ class DatabaseSeeder extends Seeder
             'contact' => '-',
             'address' => '-',
         ]);
+
+        $this->call([
+            BranchSeeder::class,
+            UserSeeder::class,
+        ]);
     }
 }

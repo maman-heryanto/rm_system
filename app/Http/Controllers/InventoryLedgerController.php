@@ -13,8 +13,25 @@ class InventoryLedgerController extends Controller
     {
         $startDate = $request->input('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->input('end_date', \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d'));
+        
+        $user = auth()->user();
+        $selectedBranch = null;
+        $branches = [];
 
-        $ledgers = \App\Models\InventoryLedger::orderBy('date')->orderBy('id')->get();
+        $query = \App\Models\InventoryLedger::orderBy('date')->orderBy('id');
+
+        if ($user && $user->isSuperAdmin()) {
+            $branches = \App\Models\Branch::orderBy('name')->get();
+            if ($request->filled('branch_id')) {
+                $selectedBranch = $request->branch_id;
+                $query->where('branch_id', $selectedBranch);
+            }
+        } elseif ($user && $user->isAdmin()) {
+            $selectedBranch = $user->branch_id;
+            $query->where('branch_id', $selectedBranch);
+        }
+
+        $ledgers = $query->get();
 
         // Calculate Running Balance
         $balance = 0;
@@ -75,7 +92,9 @@ class InventoryLedgerController extends Controller
             'totalKeluar' => $totalKeluar,
             'stockPerItem' => $stockPerItem,
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'branches' => $branches,
+            'selectedBranch' => $selectedBranch,
         ]);
     }
 
@@ -84,13 +103,24 @@ class InventoryLedgerController extends Controller
      */
     public function create()
     {
-        $existingItems = \App\Models\InventoryLedger::whereNotNull('item_name')
-            ->select('item_name')
+        $user = auth()->user();
+        $query = \App\Models\InventoryLedger::whereNotNull('item_name');
+
+        if ($user && $user->isAdmin()) {
+            $query->where('branch_id', $user->branch_id);
+        }
+
+        $existingItems = $query->select('item_name')
             ->distinct()
             ->orderBy('item_name')
             ->pluck('item_name');
             
-        return view('inventory.create', compact('existingItems'));
+        $branches = [];
+        if ($user && $user->isSuperAdmin()) {
+            $branches = \App\Models\Branch::orderBy('name')->get();
+        }
+
+        return view('inventory.create', compact('existingItems', 'branches'));
     }
 
     /**
@@ -105,11 +135,20 @@ class InventoryLedgerController extends Controller
             'quantity' => 'nullable|integer|min:1',
             'unit_price' => 'nullable|numeric|min:0',
             'amount' => 'nullable|numeric|min:0',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         $type = $request->type;
         $amount = $request->amount;
         $itemName = $request->item_name ? strtoupper($request->item_name) : null;
+        
+        $user = auth()->user();
+        $branchId = null;
+        if ($user && $user->isSuperAdmin()) {
+            $branchId = $request->branch_id;
+        } elseif ($user && $user->isAdmin()) {
+            $branchId = $user->branch_id;
+        }
 
         if ($type == 'purchase' || $type == 'sale_item') {
             $amount = $request->quantity * $request->unit_price;
@@ -118,16 +157,19 @@ class InventoryLedgerController extends Controller
         // Add backend validation for sale_item
         if ($type == 'sale_item' && $itemName) {
             $totalIn = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $branchId)
                 ->whereIn('type', ['initial', 'purchase'])
                 ->sum('quantity');
                 
             $totalOut = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $branchId)
                 ->where('type', 'sale')
                 ->sum('quantity');
                 
             $maxStock = max(0, $totalIn - $totalOut);
             
             $minPrice = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $branchId)
                 ->where('type', 'purchase')
                 ->max('unit_price') ?? 0;
 
@@ -156,6 +198,7 @@ class InventoryLedgerController extends Controller
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'amount' => $amount,
+            'branch_id' => $branchId,
         ]);
 
         return redirect()->route('inventory.index')->with('success', 'Entry added successfully.');
@@ -165,13 +208,28 @@ class InventoryLedgerController extends Controller
     {
         $ledger = \App\Models\InventoryLedger::findOrFail($id);
         
-        $existingItems = \App\Models\InventoryLedger::whereNotNull('item_name')
-            ->select('item_name')
+        $user = auth()->user();
+        if ($user && $user->isAdmin() && $ledger->branch_id !== $user->branch_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $query = \App\Models\InventoryLedger::whereNotNull('item_name');
+        
+        if ($user && $user->isAdmin()) {
+            $query->where('branch_id', $user->branch_id);
+        }
+
+        $existingItems = $query->select('item_name')
             ->distinct()
             ->orderBy('item_name')
             ->pluck('item_name');
             
-        return view('inventory.edit', compact('ledger', 'existingItems'));
+        $branches = [];
+        if ($user && $user->isSuperAdmin()) {
+            $branches = \App\Models\Branch::orderBy('name')->get();
+        }
+
+        return view('inventory.edit', compact('ledger', 'existingItems', 'branches'));
     }
 
     public function update(\Illuminate\Http\Request $request, $id)
@@ -183,9 +241,15 @@ class InventoryLedgerController extends Controller
             'quantity' => 'nullable|integer|min:1',
             'unit_price' => 'nullable|numeric|min:0',
             'amount' => 'nullable|numeric|min:0',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         $ledger = \App\Models\InventoryLedger::findOrFail($id);
+        
+        $user = auth()->user();
+        if ($user && $user->isAdmin() && $ledger->branch_id !== $user->branch_id) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $type = $request->type;
         $amount = $request->amount;
@@ -198,10 +262,12 @@ class InventoryLedgerController extends Controller
         // Add backend validation for sale_item on update
         if ($type == 'sale_item' && $itemName) {
             $totalIn = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $ledger->branch_id)
                 ->whereIn('type', ['initial', 'purchase'])
                 ->sum('quantity');
                 
             $totalOut = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $ledger->branch_id)
                 ->where('type', 'sale')
                 ->where('id', '!=', $id) // Exclude current transaction
                 ->sum('quantity');
@@ -211,6 +277,7 @@ class InventoryLedgerController extends Controller
             $maxStock = max(0, $totalIn - $totalOut);
             
             $minPrice = \App\Models\InventoryLedger::where('item_name', $itemName)
+                ->where('branch_id', $ledger->branch_id)
                 ->where('type', 'purchase')
                 ->max('unit_price') ?? 0;
 
@@ -231,15 +298,21 @@ class InventoryLedgerController extends Controller
         if (in_array($type, ['sale_item'])) {
             $type = 'sale';
         }
-
-        $ledger->update([
+        
+        $updateData = [
             'date' => $request->date,
             'type' => $type,
             'item_name' => $itemName,
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'amount' => $amount,
-        ]);
+        ];
+        
+        if ($user && $user->isSuperAdmin() && $request->filled('branch_id')) {
+            $updateData['branch_id'] = $request->branch_id;
+        }
+
+        $ledger->update($updateData);
 
         return redirect()->route('inventory.index')->with('success', 'Entry updated successfully.');
     }
