@@ -11,11 +11,16 @@ class Expense extends Model
         'category',
         'description',
         'amount',
+        'branch_id',
     ];
 
     protected $casts = [
         'expense_date' => 'date',
         'amount' => 'decimal:2',
     ];
-    //
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

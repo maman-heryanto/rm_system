@@ -38,6 +38,21 @@
 
                 <form action="{{ route('expenses.store') }}" method="POST">
                     @csrf
+                    
+                    @if(auth()->check() && auth()->user()->isSuperAdmin())
+                    <div class="mb-3">
+                        <label for="branch_id" class="form-label">Cabang <span class="text-danger">*</span></label>
+                        <select class="form-select" id="branch_id" name="branch_id" required>
+                            <option value="">-- Pilih Cabang --</option>
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                    {{ $branch->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
                     <div class="mb-3">
                         <label for="expense_date" class="form-label">Tanggal Pengeluaran</label>
                         <input type="date" class="form-control" id="expense_date" name="expense_date" value="{{ old('expense_date', date('Y-m-d')) }}" required>
