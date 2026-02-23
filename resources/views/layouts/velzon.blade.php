@@ -19,6 +19,31 @@
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        /* Custom Sidebar Styling to match Login Page */
+        [data-sidebar="dark"] .app-menu {
+            background: linear-gradient(135deg, rgba(16, 42, 28, 1) 0%, rgba(22, 60, 40, 1) 100%) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        [data-sidebar="dark"] .menu-title {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+        [data-sidebar="dark"] .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        [data-sidebar="dark"] .navbar-nav .nav-link:hover {
+            color: #fff !important;
+        }
+        [data-sidebar="dark"] .navbar-nav .nav-link[data-bs-toggle=collapse][aria-expanded=true] {
+            color: #fff !important;
+        }
+        [data-sidebar="dark"] .navbar-nav .nav-sm .nav-link {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+        [data-sidebar="dark"] .navbar-nav .nav-sm .nav-link:hover {
+            color: #fff !important;
+        }
+    </style>
     @stack('css')
 </head>
 
