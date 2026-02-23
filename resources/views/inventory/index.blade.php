@@ -94,8 +94,19 @@
                                         <div class="text-muted fs-12">{{ $ledger->quantity }} x Rp {{ number_format($ledger->unit_price, 0, ',', '.') }}</div>
                                     @elseif($ledger->type == 'initial')
                                         Saldo Awal
-                                    @else
-                                        Input Penjualan Langsung
+                                    @elseif($ledger->type == 'sale')
+                                        @if($ledger->item_name && $ledger->unit_price)
+                                            <!-- Sale Item (Keluar Barang) -->
+                                            <div class="fw-medium">{{ $ledger->item_name }}</div>
+                                            <div class="text-muted fs-12">{{ $ledger->quantity }} x Rp {{ number_format($ledger->unit_price, 0, ',', '.') }}</div>
+                                        @elseif($ledger->item_name && $ledger->amount && !$ledger->unit_price)
+                                            <!-- Sale Direct (Input Penjualan Langsung dengan Barang) -->
+                                            <div class="fw-medium">{{ $ledger->item_name }}</div>
+                                            <div class="text-muted fs-12">{{ $ledger->quantity }} (Terjual)</div>
+                                        @else
+                                            <!-- Regular Sale (Rp Saja) -->
+                                            Penjualan (Rp Saja)
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="text-end text-success">

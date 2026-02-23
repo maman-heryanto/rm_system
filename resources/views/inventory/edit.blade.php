@@ -20,16 +20,54 @@
                             <input type="date" class="form-control" id="date" name="date" value="{{ old('date', $ledger->date->format('Y-m-d')) }}" required>
                         </div>
                         <div class="col-md-6">
+                            @php
+                                $currentType = old('type', $ledger->type);
+                                if ($currentType == 'sale') {
+                                    if ($ledger->item_name && $ledger->unit_price) {
+                                        $currentType = 'sale_item';
+                                    } elseif ($ledger->item_name && $ledger->amount && !$ledger->unit_price) {
+                                        $currentType = 'sale_direct';
+                                    }
+                                }
+                            @endphp
+
                             <label for="type" class="form-label">Tipe</label>
-                            <select class="form-select" id="type" name="type" required onchange="toggleFields()">
-                                <option value="purchase" {{ old('type', $ledger->type) == 'purchase' ? 'selected' : '' }}>Pembelian (Masuk)</option>
-                                <option value="sale" {{ old('type', $ledger->type) == 'sale' ? 'selected' : '' }}>Penjualan (Keluar)</option>
-                                <option value="initial" {{ old('type', $ledger->type) == 'initial' ? 'selected' : '' }}>Saldo Awal</option>
-                            </select>
+                            <div class="d-flex flex-column gap-2 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeInitial" value="initial" {{ $currentType == 'initial' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeInitial">
+                                        Saldo Awal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typePrice" value="purchase" {{ $currentType == 'purchase' ? 'checked' : '' }} onchange="toggleFields()" required>
+                                    <label class="form-check-label" for="typePrice">
+                                        Pembelian (Masuk)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeSale" value="sale" {{ $currentType == 'sale' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeSale">
+                                        Penjualan (Keluar) - Rp Saja
+                                    </label>
+                                </div>
+                                <div class="form-check ms-4">
+                                    <input class="form-check-input" type="radio" name="type" id="typeSaleDirect" value="sale_direct" {{ $currentType == 'sale_direct' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeSaleDirect">
+                                        Input Penjualan Langsung (Barang Existing)
+                                    </label>
+                                </div>
+                                <div class="form-check ms-4">
+                                    <input class="form-check-input" type="radio" name="type" id="typeSaleItem" value="sale_item" {{ $currentType == 'sale_item' ? 'checked' : '' }} onchange="toggleFields()">
+                                    <label class="form-check-label" for="typeSaleItem">
+                                        Keluar Barang (Input Jumlah & Harga Satuan)
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Purchase Fields -->
-                        <div id="purchase_fields">
+                        <!-- Purchase / Sale Item Fields -->
+                        <div id="purchase_fields" style="display: none;">
                             <div class="col-12 mb-3">
                                 <label for="item_name" class="form-label">Nama Barang</label>
                                 <input type="text" class="form-control" id="item_name" name="item_name" value="{{ old('item_name', $ledger->item_name) }}">
@@ -37,33 +75,51 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="quantity_display" class="form-label">Jumlah</label>
-                                    <input type="text" class="form-control" id="quantity_display" placeholder="0" value="{{ old('quantity', $ledger->quantity) }}" onkeyup="updateInput(this, 'quantity')">
+                                    <input type="text" class="form-control" id="quantity_display" value="{{ old('quantity', $ledger->quantity ? number_format($ledger->quantity, 0, ',', '.') : '') }}" placeholder="0" onkeyup="updateInput(this, 'quantity')">
                                     <input type="hidden" id="quantity" name="quantity" value="{{ old('quantity', $ledger->quantity) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="unit_price_display" class="form-label">Harga Satuan</label>
-                                    <input type="text" class="form-control" id="unit_price_display" placeholder="Rp 0" value="{{ old('unit_price', $ledger->unit_price) }}" onkeyup="updateInput(this, 'unit_price')">
+                                    <input type="text" class="form-control" id="unit_price_display" value="{{ old('unit_price', $ledger->unit_price ? number_format($ledger->unit_price, 0, ',', '.') : '') }}" placeholder="Rp 0" onkeyup="updateInput(this, 'unit_price')">
                                     <input type="hidden" id="unit_price" name="unit_price" value="{{ old('unit_price', $ledger->unit_price) }}">
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label">Total Pembelian</label>
+                                <label class="form-label">Total Amount</label>
                                 <div class="fs-4 fw-bold text-success" id="purchase_total_display">Rp 0</div>
+                            </div>
+                        </div>
+
+                        <!-- Sale Direct (Existing Item) -->
+                        <div id="sale_direct_fields" style="display: none;">
+                            <div class="col-12 mb-3">
+                                <label for="existing_item_name" class="form-label">Nama Barang (Existing)</label>
+                                <input type="text" class="form-control" id="existing_item_name" name="existing_item_name" value="{{ old('existing_item_name', $ledger->item_name) }}">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="direct_quantity_display" class="form-label">Jumlah Terjual</label>
+                                    <input type="text" class="form-control" id="direct_quantity_display" value="{{ old('quantity', ($currentType == 'sale_direct' && $ledger->quantity) ? number_format($ledger->quantity, 0, ',', '.') : '') }}" placeholder="0" onkeyup="updateInput(this, 'quantity')">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="direct_amount_display" class="form-label">Total Harga (Rp)</label>
+                                    <input type="text" class="form-control" id="direct_amount_display" value="{{ old('amount', ($currentType == 'sale_direct' && $ledger->amount) ? number_format($ledger->amount, 0, ',', '.') : '') }}" placeholder="Rp 0" onkeyup="updateInput(this, 'amount')">
+                                </div>
                             </div>
                         </div>
 
                         <!-- Direct Amount Field (Sale/Initial) -->
                         <div id="amount_field" style="display: none;">
                             <div class="col-12 mb-3">
-                                <label for="amount_display" class="form-label" id="amount_label">Jumlah</label>
-                                <input type="text" class="form-control" id="amount_display" placeholder="Rp 0" value="{{ old('amount', $ledger->amount) }}" onkeyup="updateInput(this, 'amount')">
+                                <label for="amount_display" class="form-label" id="amount_label">Jumlah (Rp)</label>
+                                <input type="text" class="form-control" id="amount_display" value="{{ old('amount', ($currentType == 'initial' || $currentType == 'sale') && $ledger->amount ? number_format($ledger->amount, 0, ',', '.') : '') }}" placeholder="Rp 0" onkeyup="updateInput(this, 'amount')">
                                 <input type="hidden" id="amount" name="amount" value="{{ old('amount', $ledger->amount) }}">
                             </div>
                         </div>
 
-                        <div class="col-12 text-end">
+                        <div class="col-12 text-end mt-3">
                             <a href="{{ route('inventory.index') }}" class="btn btn-light me-2">Batal</a>
-                            <button type="submit" class="btn btn-primary">Perbarui</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
                     </div>
                 </form>
@@ -74,36 +130,64 @@
 
 <script>
     function toggleFields() {
-        const type = document.getElementById('type').value;
+        const typeInput = document.querySelector('input[name="type"]:checked');
+        const type = typeInput ? typeInput.value : 'initial';
         const purchaseFields = document.getElementById('purchase_fields');
+        const saleDirectFields = document.getElementById('sale_direct_fields');
         const amountField = document.getElementById('amount_field');
         const amountLabel = document.getElementById('amount_label');
 
-        if (type === 'purchase') {
+        // Hide all fields first
+        purchaseFields.style.display = 'none';
+        saleDirectFields.style.display = 'none';
+        amountField.style.display = 'none';
+
+        if (type === 'purchase' || type === 'sale_item') {
             purchaseFields.style.display = 'block';
-            amountField.style.display = 'none';
+            let colorClass = type === 'purchase' ? 'text-success' : 'text-danger';
+            document.getElementById('purchase_total_display').className = 'fs-4 fw-bold ' + colorClass;
+        } else if (type === 'sale_direct') {
+            saleDirectFields.style.display = 'block';
         } else {
-            purchaseFields.style.display = 'none';
             amountField.style.display = 'block';
-            
             if (type === 'sale') {
-                amountLabel.innerText = 'Jumlah Penjualan (Keluar)';
+                amountLabel.innerText = 'Jumlah Penjualan (Keluar) - Rp';
             } else {
-                amountLabel.innerText = 'Jumlah Saldo Awal';
+                amountLabel.innerText = 'Jumlah Saldo Awal - Rp';
             }
+        }
+        
+        // Setup existing calculation if relevant
+        if (type === 'purchase' || type === 'sale_item') {
+            calculateTotal();
         }
     }
 
     function updateInput(element, hiddenId) {
+        // 1. Get raw value (digits only)
         let value = element.value.replace(/[^0-9]/g, '');
-        document.getElementById(hiddenId).value = value;
         
+        // 2. Update hidden input mapping for quantity/price
+        let targetId = document.getElementById(hiddenId);
+        if (targetId) {
+            targetId.value = value;
+        } else {
+             let h = element.parentNode.querySelector('input[type="hidden"]');
+             if(h) h.value = value;
+             else {
+                 let el = document.getElementById(hiddenId);
+                 if(el) el.value = value;
+             }
+        }
+        
+        // 3. Format display (Thousands separator)
         if (value) {
             element.value = new Intl.NumberFormat('id-ID').format(value);
         } else {
             element.value = '';
         }
 
+        // 4. Trigger Total Calc if needed
         if (hiddenId === 'quantity' || hiddenId === 'unit_price') {
             calculateTotal();
         }
@@ -116,13 +200,6 @@
         document.getElementById('purchase_total_display').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
     }
 
-    function formatInitialValues() {
-        const qtyInput = document.getElementById('quantity_display');
-        const priceInput = document.getElementById('unit_price_display');
-        const amountInput = document.getElementById('amount_display');
-
-        if(qtyInput.value) qtyInput.value = new Intl.NumberFormat('id-ID').format(qtyInput.value);
-        if(priceInput.value) priceInput.value = new Intl.NumberFormat('id-ID').format(priceInput.value);
         if(amountInput.value) amountInput.value = new Intl.NumberFormat('id-ID').format(amountInput.value);
         
         calculateTotal();

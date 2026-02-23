@@ -56,22 +56,33 @@ class InventoryLedgerController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
-            'type' => 'required|in:initial,purchase,sale',
-            'item_name' => 'nullable|string|required_if:type,purchase',
-            'quantity' => 'nullable|integer|min:1|required_if:type,purchase',
-            'unit_price' => 'nullable|numeric|min:0|required_if:type,purchase',
-            'amount' => 'nullable|numeric|min:0|required_if:type,initial,sale',
+            'type' => 'required|in:initial,purchase,sale,sale_direct,sale_item',
+            'item_name' => 'nullable|string',
+            'existing_item_name' => 'nullable|string',
+            'quantity' => 'nullable|integer|min:1',
+            'unit_price' => 'nullable|numeric|min:0',
+            'amount' => 'nullable|numeric|min:0',
         ]);
 
+        $type = $request->type;
         $amount = $request->amount;
-        if ($request->type == 'purchase') {
+        $itemName = $request->item_name;
+
+        if ($type == 'purchase' || $type == 'sale_item') {
             $amount = $request->quantity * $request->unit_price;
+        } elseif ($type == 'sale_direct') {
+            $itemName = $request->existing_item_name; // Use existing item name
+        }
+
+        // Normalize sale sub-types to 'sale' for database
+        if (in_array($type, ['sale_direct', 'sale_item'])) {
+            $type = 'sale';
         }
 
         \App\Models\InventoryLedger::create([
             'date' => $request->date,
-            'type' => $request->type,
-            'item_name' => $request->item_name,
+            'type' => $type,
+            'item_name' => $itemName,
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'amount' => $amount,
@@ -90,24 +101,35 @@ class InventoryLedgerController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
-            'type' => 'required|in:initial,purchase,sale',
-            'item_name' => 'nullable|string|required_if:type,purchase',
-            'quantity' => 'nullable|integer|min:1|required_if:type,purchase',
-            'unit_price' => 'nullable|numeric|min:0|required_if:type,purchase',
-            'amount' => 'nullable|numeric|min:0|required_if:type,initial,sale',
+            'type' => 'required|in:initial,purchase,sale,sale_direct,sale_item',
+            'item_name' => 'nullable|string',
+            'existing_item_name' => 'nullable|string',
+            'quantity' => 'nullable|integer|min:1',
+            'unit_price' => 'nullable|numeric|min:0',
+            'amount' => 'nullable|numeric|min:0',
         ]);
 
         $ledger = \App\Models\InventoryLedger::findOrFail($id);
 
+        $type = $request->type;
         $amount = $request->amount;
-        if ($request->type == 'purchase') {
+        $itemName = $request->item_name;
+
+        if ($type == 'purchase' || $type == 'sale_item') {
             $amount = $request->quantity * $request->unit_price;
+        } elseif ($type == 'sale_direct') {
+            $itemName = $request->existing_item_name; // Use existing item name
+        }
+
+        // Normalize sale sub-types to 'sale' for database
+        if (in_array($type, ['sale_direct', 'sale_item'])) {
+            $type = 'sale';
         }
 
         $ledger->update([
             'date' => $request->date,
-            'type' => $request->type,
-            'item_name' => $request->item_name,
+            'type' => $type,
+            'item_name' => $itemName,
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'amount' => $amount,
