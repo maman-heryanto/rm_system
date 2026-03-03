@@ -52,18 +52,22 @@ class InventoryLedgerController extends Controller
             return $itemDate >= $startDate && $itemDate <= $endDate;
         })->values();
 
-        // Calculate period totals
+        // Calculate period totals for the dashboard cards (income/expense)
         $totalMasuk = $filteredLedgers->whereIn('type', ['initial', 'purchase'])->sum('amount');
         $totalKeluar = $filteredLedgers->where('type', 'sale')->sum('amount');
 
-        // Calculate Total Stock (summen quantity) over filtered period
-        $totalStockIn = $filteredLedgers->whereIn('type', ['initial', 'purchase'])->sum('quantity');
-        $totalStockOut = $filteredLedgers->where('type', 'sale')->sum('quantity');
+        // Calculate Total Stock (cumulative up to endDate)
+        $cumulativeToDate = $ledgers->filter(function ($item) use ($endDate) {
+            return \Carbon\Carbon::parse($item->date)->format('Y-m-d') <= $endDate;
+        });
+
+        $totalStockIn = $cumulativeToDate->whereIn('type', ['initial', 'purchase'])->sum('quantity');
+        $totalStockOut = $cumulativeToDate->where('type', 'sale')->sum('quantity');
         $totalStock = max(0, $totalStockIn - $totalStockOut);
 
-        // Calculate Stock Per Item over filtered period
+        // Calculate Stock Per Item (cumulative up to endDate)
         $stockPerItem = [];
-        $items = $filteredLedgers->whereNotNull('item_name')->groupBy('item_name');
+        $items = $cumulativeToDate->whereNotNull('item_name')->groupBy('item_name');
         foreach ($items as $name => $transactions) {
             $in = $transactions->whereIn('type', ['initial', 'purchase'])->sum('quantity');
             $out = $transactions->where('type', 'sale')->sum('quantity');
