@@ -84,17 +84,6 @@ class InventoryLedgerController extends Controller
         // Reverse collection to display in descending order, newest first
         $filteredLedgers = $filteredLedgers->reverse()->values();
 
-        // Determine total saldo (ending balance of the period)
-        if ($filteredLedgers->isNotEmpty()) {
-            $totalSaldo = $filteredLedgers->first()->balance;
-        } else {
-            // Find last transaction before startDate
-            $lastBefore = $ledgers->filter(function($i) use ($startDate) {
-                return \Carbon\Carbon::parse($i->date)->format('Y-m-d') < $startDate;
-            })->last();
-            $totalSaldo = $lastBefore ? $lastBefore->balance : 0;
-        }
-
         return view('inventory.index', [
             'ledgers' => $filteredLedgers,
             'totalSaldo' => $totalSaldo,
