@@ -288,3 +288,26 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+
+        if (startDateInput && endDateInput) {
+            endDateInput.addEventListener('change', function() {
+                if (this.value && startDateInput.value && this.value < startDateInput.value) {
+                    startDateInput.value = this.value;
+                }
+            });
+
+            startDateInput.addEventListener('change', function() {
+                if (this.value && endDateInput.value && this.value > endDateInput.value) {
+                    endDateInput.value = this.value;
+                }
+            });
+        }
+    });
+</script>
+@endpush
