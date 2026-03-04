@@ -209,7 +209,7 @@
                 <div class="mb-4">
                     <label for="email" class="form-label">Alamat Email</label>
                     <div class="position-relative">
-                        <input type="email" class="form-control glass-input ps-4" id="email" name="email" value="{{ old('email') }}" placeholder="admin@rizkimandiri.com" required>
+                        <input type="email" class="form-control glass-input ps-4" id="email" name="email" value="{{ old('email', request()->cookie('remember_email')) }}" placeholder="admin@rm.com" required>
                     </div>
                 </div>
 
@@ -227,7 +227,7 @@
                 </div>
 
                 <div class="form-check mb-4 mt-2">
-                    <input class="form-check-input" type="checkbox" name="remember" id="auth-remember-check">
+                    <input class="form-check-input" type="checkbox" name="remember" id="auth-remember-check" {{ old('remember', request()->cookie('remember_email')) ? 'checked' : '' }}>
                     <label class="form-check-label fs-14" for="auth-remember-check">Ingat sesi saya</label>
                 </div>
 

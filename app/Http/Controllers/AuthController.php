@@ -20,6 +20,12 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if ($request->boolean('remember')) {
+                cookie()->queue('remember_email', $request->email, 60 * 24 * 30); // 30 days
+            } else {
+                cookie()->queue(cookie()->forget('remember_email'));
+            }
+
             $request->session()->regenerate();
             if (auth()->user()->isSuperAdmin()) {
                 return redirect()->intended('inventory');
